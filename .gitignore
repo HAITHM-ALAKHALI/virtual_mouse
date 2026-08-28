@@ -1,2 +1,28 @@
+# Byte-compiled / cached
 __pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
 venv/
+.env/
+env/
+
+# IDE / Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS artifacts
+Thumbs.db
+.DS_Store
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Qodo
+.qodo/
