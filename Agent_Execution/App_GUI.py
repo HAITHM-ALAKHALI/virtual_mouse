@@ -127,7 +127,9 @@ class VirtualMouseApp(ctk.CTk):
             height=520,
         )
         self.preview_card.pack(fill="none", padx=24, pady=(8, 0))
-        self.preview_card.pack_propagate(False)  # لمنع تمدد البطاقة تلقائياً حسب المحتوى
+        self.preview_card.pack_propagate(
+            False
+        )  # لمنع تمدد البطاقة تلقائياً حسب المحتوى
 
         # ضبط Label المعاينة في منتصف البطاقة تماماً وبأبعاد الكاميرا الفعلية
         self.preview_label = ctk.CTkLabel(
@@ -142,7 +144,7 @@ class VirtualMouseApp(ctk.CTk):
 
     def _set_preview_placeholder(self) -> None:
         self.preview_label.configure(
-            text="📷  Camera preview will appear here",
+            text="📷  Camera preview will appear here\n(Note: The camera may take a while to open)",
             font=("Segoe UI", 14),
             text_color=TEXT_MUTED,
             image=None,

@@ -1,11 +1,3 @@
-"""
-Main — Virtual Mouse Controller
-
-Provides the `VirtualMouseController` class that uses a trained gesture-
-recognition model and MediaPipe hand tracking to translate hand gestures
-into desktop mouse actions (move, click, scroll, drag).
-"""
-
 import cv2
 import numpy as np
 import pyautogui
@@ -17,37 +9,16 @@ import logging
 import threading
 from typing import Optional
 
-# Ensure Utils is importable
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "Utils")))
 import HandTrackingModule as htm
 
 logger = logging.getLogger(__name__)
 
-# Disable pyautogui fail-safe for smoother continuous mouse control
 pyautogui.FAILSAFE = False
 
 
 class VirtualMouseController:
-    """Controls the desktop mouse cursor via hand-gesture recognition.
 
-    The controller opens a webcam feed, detects the user's hand with
-    MediaPipe, extracts normalised landmark features, and feeds them to a
-    pre-trained classifier.  The predicted gesture label is then mapped to
-    a ``pyautogui`` action (move, left-click, right-click, scroll, drag).
-
-    Thread-safe: call :meth:`start` from any thread, and :meth:`stop` from
-    another to cleanly shut down.
-
-    Args:
-        smoothening:  Cursor movement smoothing factor (1 = raw, 15 = very smooth).
-        deadzone:     Pixel distance from screen centre that is treated as
-                      "no scroll" when in Scroll mode.
-        scroll_speed: Lines to scroll per frame when above/below the deadzone.
-        cam_width:    Requested camera frame width.
-        cam_height:   Requested camera frame height.
-    """
-
-    # Frame margins (pixels) — area inside the camera frame used for mapping
     FRAME_LEFT = 100
     FRAME_TOP = 100
     FRAME_RIGHT = 100
@@ -73,12 +44,7 @@ class VirtualMouseController:
         self._current_action: str = ""
         self._current_fps: float = 0.0
 
-        # Load model
         self._model = self._load_model()
-
-    # ------------------------------------------------------------------
-    # Properties (thread-safe setters for GUI sliders)
-    # ------------------------------------------------------------------
 
     @property
     def smoothening(self) -> int:
@@ -112,18 +78,12 @@ class VirtualMouseController:
     def current_fps(self) -> float:
         return self._current_fps
 
-    # ------------------------------------------------------------------
-    # Model loading
-    # ------------------------------------------------------------------
-
     @staticmethod
     def _load_model():
-        """Load the trained gesture-recognition model from disk."""
         current_dir = os.path.dirname(__file__)
         model_path = os.path.join(
             current_dir, "..", "Model_Training", "virtual_mouse_brain.pkl"
         )
-        model_path = os.path.normpath(model_path)
 
         if not os.path.isfile(model_path):
             raise FileNotFoundError(
@@ -137,30 +97,16 @@ class VirtualMouseController:
         logger.info("Model loaded successfully.")
         return model
 
-    # ------------------------------------------------------------------
-    # Frame access (for GUI embedding)
-    # ------------------------------------------------------------------
-
     def get_frame(self) -> Optional[np.ndarray]:
-        """Return the latest processed camera frame (BGR), or None."""
         with self._frame_lock:
             return self._latest_frame.copy() if self._latest_frame is not None else None
 
-    # ------------------------------------------------------------------
-    # Main loop
-    # ------------------------------------------------------------------
-
     def start(self) -> None:
-        """Open the camera and begin the gesture → mouse-action loop.
-
-        This method **blocks** until :meth:`stop` is called from another
-        thread or the camera feed fails.
-        """
         self._stop_event.clear()
 
         cap = cv2.VideoCapture(0)
-        cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.cam_width)
-        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.cam_height)
+        cap.set(3, self.cam_width)
+        cap.set(4, self.cam_height)
 
         if not cap.isOpened():
             logger.error("Failed to open camera.")
@@ -201,7 +147,6 @@ class VirtualMouseController:
 
                     x1, y1 = lmList[8][1], lmList[8][2]
 
-                    # Draw interactive frame boundary
                     cv2.rectangle(
                         img,
                         (self.FRAME_LEFT, self.FRAME_TOP),
@@ -213,7 +158,6 @@ class VirtualMouseController:
                         2,
                     )
 
-                    # ── Move ──
                     if prediction == "Move":
                         x3 = np.interp(
                             x1,
@@ -231,21 +175,18 @@ class VirtualMouseController:
                         cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
                         plocX, plocY = clocX, clocY
 
-                    # ── Left Click ──
                     elif prediction == "Left_Click":
                         cv2.circle(img, (x1, y1), 15, (0, 255, 0), cv2.FILLED)
                         if clickDelay == 0:
                             pyautogui.click(button="left")
                             clickDelay = 5
 
-                    # ── Right Click ──
                     elif prediction == "Right_Click":
                         cv2.circle(img, (x1, y1), 15, (0, 0, 255), cv2.FILLED)
                         if clickDelay == 0:
                             pyautogui.click(button="right")
                             clickDelay = 5
 
-                    # ── Scroll ──
                     elif prediction == "Scroll":
                         cv2.circle(img, (x1, y1), 15, (255, 255, 0), cv2.FILLED)
                         centerY = self.cam_height / 2
@@ -273,7 +214,6 @@ class VirtualMouseController:
                                 2,
                             )
 
-                    # ── Drag ──
                     elif prediction == "Drag":
                         x3 = np.interp(
                             x1,
@@ -296,12 +236,10 @@ class VirtualMouseController:
                         cv2.circle(img, (x1, y1), 15, (0, 255, 255), cv2.FILLED)
                         plocX, plocY = clocX, clocY
 
-                    # Release drag if gesture changed
                     if dragging and prediction != "Drag":
                         pyautogui.mouseUp(button="left")
                         dragging = False
 
-                    # Action label on frame
                     cv2.putText(
                         img,
                         f"Action: {prediction}",
@@ -314,11 +252,9 @@ class VirtualMouseController:
                 else:
                     self._current_action = ""
 
-                # Click cooldown
                 if clickDelay > 0:
                     clickDelay -= 1
 
-                # FPS calculation
                 cTime = time.time()
                 if pTime != 0:
                     self._current_fps = 1.0 / (cTime - pTime)
@@ -336,14 +272,12 @@ class VirtualMouseController:
                     2,
                 )
 
-                # Store frame for GUI embedding
                 with self._frame_lock:
                     self._latest_frame = img
 
         except Exception:
             logger.exception("Unexpected error in Virtual Mouse loop")
         finally:
-            # Clean up drag state
             if dragging:
                 pyautogui.mouseUp(button="left")
             cap.release()
@@ -355,11 +289,9 @@ class VirtualMouseController:
             logger.info("Virtual Mouse stopped.")
 
     def stop(self) -> None:
-        """Signal the main loop to exit."""
         self._stop_event.set()
         logger.info("Stop signal sent.")
 
     @property
     def is_running(self) -> bool:
-        """True while the main loop is active."""
         return not self._stop_event.is_set()
