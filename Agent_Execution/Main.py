@@ -19,10 +19,10 @@ pyautogui.FAILSAFE = False
 
 class VirtualMouseController:
 
-    FRAME_LEFT = 100
-    FRAME_TOP = 100
-    FRAME_RIGHT = 100
-    FRAME_BOTTOM = 150
+    FRAME_LEFT = 80
+    FRAME_TOP = 80
+    FRAME_RIGHT = 80
+    FRAME_BOTTOM = 60
 
     def __init__(
         self,
