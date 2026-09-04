@@ -25,19 +25,24 @@ ctk.set_appearance_mode("Dark")
 ctk.set_default_color_theme("blue")
 
 # ── Colour Palette ──
-BG_DARK = "#0d0f12"
-CARD_BG = "#161a20"
-CARD_BORDER = "#23272f"
-ACCENT = "#6c63ff"
-ACCENT_HOVER = "#5549e0"
-SUCCESS = "#22c55e"
-SUCCESS_HOVER = "#16a34a"
-DANGER = "#ef4444"
-DANGER_HOVER = "#dc2626"
-TEXT_PRIMARY = "#f1f5f9"
-TEXT_SECONDARY = "#94a3b8"
-TEXT_MUTED = "#64748b"
-DIVIDER = "#1e293b"
+BG_DARK = "#111111"
+CARD_BG = "#191919"
+CARD_BORDER = "#2A2A2A"
+
+ACCENT = "#4587A5"
+ACCENT_HOVER = "#4587A57D"
+
+SUCCESS = "#4ADE80"
+SUCCESS_HOVER = "#22C55E"
+
+DANGER = "#F87171"
+DANGER_HOVER = "#EF4444"
+
+TEXT_PRIMARY = "#F5F5F5"
+TEXT_SECONDARY = "#A3A3A3"
+TEXT_MUTED = "#737373"
+
+DIVIDER = "#262626"
 
 # Gesture colour coding (matches the OpenCV overlay colours)
 GESTURE_COLORS = {
