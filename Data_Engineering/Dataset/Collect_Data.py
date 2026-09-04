@@ -1,5 +1,6 @@
 import sys
 import os
+import math
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
@@ -39,10 +40,29 @@ while True:
         row_data = []
         wrist_x, wrist_y = lmList[0][1], lmList[0][2]
 
-        for lm in lmList:
-            norm_x = lm[1] - wrist_x
-            norm_y = lm[2] - wrist_y
-            row_data.extend([norm_x, norm_y])
+        middle_mcp_x = lmList[9][1] - wrist_x
+        middle_mcp_y = lmList[9][2] - wrist_y
+
+        scale = math.sqrt(middle_mcp_x**2 + middle_mcp_y**2)
+
+        if scale != 0:
+            handedness = detector.getHandedness()
+
+            if handedness == "Right":
+                actual_hand = "Left"
+            elif handedness == "Left":
+                actual_hand = "Right"
+            else:
+                actual_hand = None
+
+            for lm in lmList:
+                norm_x = (lm[1] - wrist_x) / scale
+                norm_y = (lm[2] - wrist_y) / scale
+
+                if actual_hand == "Left":
+                    norm_x = -norm_x
+
+                row_data.extend([norm_x, norm_y])
 
     cv2.imshow("Data Collector", img)
     key = cv2.waitKey(1) & 0xFF

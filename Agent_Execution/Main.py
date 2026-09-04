@@ -122,6 +122,8 @@ class VirtualMouseController:
         pTime = 0.0
         clickDelay = 0
         dragging = False
+        drag_lost_frames = 0
+        drag_change_frames = 0
 
         logger.info("Virtual Mouse started — show your hand to the camera.")
 
@@ -135,12 +137,35 @@ class VirtualMouseController:
                 img = cv2.flip(img, 1)
                 img = detector.findHands(img)
                 lmList, bbox = detector.findPosition(img, draw=False)
+                handedness = detector.getHandedness()
+
+                if handedness == "Right":
+                    actual_hand = "Left"
+                elif handedness == "Left":
+                    actual_hand = "Right"
+                else:
+                    actual_hand = None
 
                 if len(lmList) != 0:
                     wrist_x, wrist_y = lmList[0][1], lmList[0][2]
+
+                    middle_mcp_x = lmList[9][1] - wrist_x
+                    middle_mcp_y = lmList[9][2] - wrist_y
+
+                    scale = np.sqrt(middle_mcp_x**2 + middle_mcp_y**2)
+
+                    if scale == 0:
+                        continue
+
                     hand_data = []
                     for lm in lmList:
-                        hand_data.extend([lm[1] - wrist_x, lm[2] - wrist_y])
+                        norm_x = (lm[1] - wrist_x) / scale
+                        norm_y = (lm[2] - wrist_y) / scale
+
+                        if actual_hand == "Left":
+                            norm_x = -norm_x
+
+                        hand_data.extend([norm_x, norm_y])
 
                     prediction = self._model.predict([hand_data])[0]
                     self._current_action = prediction
@@ -159,21 +184,32 @@ class VirtualMouseController:
                     )
 
                     if prediction == "Move":
-                        x3 = np.interp(
-                            x1,
-                            (self.FRAME_LEFT, self.cam_width - self.FRAME_RIGHT),
-                            (0, wScr),
-                        )
-                        y3 = np.interp(
-                            y1,
-                            (self.FRAME_TOP, self.cam_height - self.FRAME_BOTTOM),
-                            (0, hScr),
-                        )
-                        clocX = plocX + (x3 - plocX) / self._smoothening
-                        clocY = plocY + (y3 - plocY) / self._smoothening
-                        pyautogui.moveTo(clocX, clocY)
-                        cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
-                        plocX, plocY = clocX, clocY
+
+                        if dragging:
+                            drag_change_frames += 1
+
+                            if drag_change_frames >= 2:
+                                pyautogui.mouseUp(button="left")
+                                dragging = False
+                                drag_change_frames = 0
+
+                        else:
+
+                            x3 = np.interp(
+                                x1,
+                                (self.FRAME_LEFT, self.cam_width - self.FRAME_RIGHT),
+                                (0, wScr),
+                            )
+                            y3 = np.interp(
+                                y1,
+                                (self.FRAME_TOP, self.cam_height - self.FRAME_BOTTOM),
+                                (0, hScr),
+                            )
+                            clocX = plocX + (x3 - plocX) / self._smoothening
+                            clocY = plocY + (y3 - plocY) / self._smoothening
+                            pyautogui.moveTo(clocX, clocY)
+                            cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
+                            plocX, plocY = clocX, clocY
 
                     elif prediction == "Left_Click":
                         cv2.circle(img, (x1, y1), 15, (0, 255, 0), cv2.FILLED)
@@ -215,6 +251,7 @@ class VirtualMouseController:
                             )
 
                     elif prediction == "Drag":
+                        drag_change_frames = 0
                         x3 = np.interp(
                             x1,
                             (self.FRAME_LEFT, self.cam_width - self.FRAME_RIGHT),
@@ -235,10 +272,6 @@ class VirtualMouseController:
                         pyautogui.moveTo(clocX, clocY)
                         cv2.circle(img, (x1, y1), 15, (0, 255, 255), cv2.FILLED)
                         plocX, plocY = clocX, clocY
-
-                    if dragging and prediction != "Drag":
-                        pyautogui.mouseUp(button="left")
-                        dragging = False
 
                     cv2.putText(
                         img,
