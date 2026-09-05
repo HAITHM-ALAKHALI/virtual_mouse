@@ -4,6 +4,7 @@ import math
 import os
 import logging
 from typing import List, Tuple, Optional
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -57,8 +58,9 @@ class handDetector:
 
         self.max_lost_frames = 20
 
-        self.max_wrist_distance = 0.2
+        self.max_wrist_distance = 0.25
 
+        self.start_time = time.time()
         self.timestamp_ms = 0
 
         logger.debug(
@@ -153,7 +155,7 @@ class handDetector:
 
         mpImage = mp.Image(image_format=mp.ImageFormat.SRGB, data=imgRGB)
 
-        self.timestamp_ms += 1
+        self.timestamp_ms = int((time.time() - self.start_time) * 1000)
 
         self.results = self.detector.detect_for_video(mpImage, self.timestamp_ms)
 
@@ -247,7 +249,7 @@ class handDetector:
 
         return self.lmList, bbox
 
-    def getHandedness(self, handNo: int = 0) -> Optional[str]:
+    def getHandedness(self, handNo: int = 0) -> Optional[str]: # right hand or left hand 
 
         if self.selected_hand is None:
             return None

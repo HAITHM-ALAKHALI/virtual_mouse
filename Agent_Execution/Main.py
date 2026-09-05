@@ -215,13 +215,13 @@ class VirtualMouseController:
                         cv2.circle(img, (x1, y1), 15, (0, 255, 0), cv2.FILLED)
                         if clickDelay == 0:
                             pyautogui.click(button="left")
-                            clickDelay = 5
+                            clickDelay = 8
 
                     elif prediction == "Right_Click":
                         cv2.circle(img, (x1, y1), 15, (0, 0, 255), cv2.FILLED)
                         if clickDelay == 0:
                             pyautogui.click(button="right")
-                            clickDelay = 5
+                            clickDelay = 8
 
                     elif prediction == "Scroll":
                         cv2.circle(img, (x1, y1), 15, (255, 255, 0), cv2.FILLED)
