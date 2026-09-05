@@ -5,6 +5,7 @@ import os
 import logging
 from typing import List, Tuple, Optional
 import time
+import sys
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +25,12 @@ class handDetector:
         self.lmList: List[List[int]] = []
         self.results = None
 
-        model_path = os.path.join(os.path.dirname(__file__), "hand_landmarker.task")
+        if getattr(sys, "frozen", False):
+            base_path = sys._MEIPASS
+        else:
+            base_path = os.path.dirname(os.path.abspath(__file__))
+
+        model_path = os.path.join(base_path, "hand_landmarker.task")
 
         if not os.path.isfile(model_path):
             raise FileNotFoundError(f"Hand landmarker model not found at: {model_path}")
@@ -249,7 +255,9 @@ class handDetector:
 
         return self.lmList, bbox
 
-    def getHandedness(self, handNo: int = 0) -> Optional[str]: # right hand or left hand 
+    def getHandedness(
+        self, handNo: int = 0
+    ) -> Optional[str]:  # right hand or left hand
 
         if self.selected_hand is None:
             return None
