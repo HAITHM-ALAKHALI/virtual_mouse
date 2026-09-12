@@ -257,7 +257,7 @@ class handDetector:
 
     def getHandedness(
         self, handNo: int = 0
-    ) -> Optional[str]:  # right hand or left hand
+    ) -> Optional[str]: 
 
         if self.selected_hand is None:
             return None
