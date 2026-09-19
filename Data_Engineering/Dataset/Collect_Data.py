@@ -69,7 +69,7 @@ while True:
 
     if len(lmList) != 0:
         label = ""
-        if key == ord("m"):
+        if key == ord("m"): # ASCII
             label = "Move"
         elif key == ord("l"):
             label = "Left_Click"

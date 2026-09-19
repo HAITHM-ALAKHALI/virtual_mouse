@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-import pyautogui
+from pynput.mouse import Controller, Button
 import pickle
 import os
 import sys
@@ -8,29 +8,30 @@ import time
 import logging
 import threading
 from typing import Optional
+import tkinter as tk
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "Utils")))
 import HandTrackingModule as htm
 
 logger = logging.getLogger(__name__)
 
-pyautogui.FAILSAFE = False
+mouse = Controller()
 
 
 class VirtualMouseController:
 
-    FRAME_LEFT = 80
-    FRAME_TOP = 80
-    FRAME_RIGHT = 80
-    FRAME_BOTTOM = 60
+    FRAME_LEFT = 100
+    FRAME_TOP = 100
+    FRAME_RIGHT = 100
+    FRAME_BOTTOM = 100
 
     def __init__(
         self,
         smoothening: int = 7,
         deadzone: int = 60,
-        scroll_speed: int = 50,
-        cam_width: int = 700,
-        cam_height: int = 500,
+        scroll_speed: int = 3,
+        cam_width: int = 640,
+        cam_height: int = 480,
     ) -> None:
         self._smoothening = smoothening
         self._deadzone = deadzone
@@ -103,10 +104,12 @@ class VirtualMouseController:
 
     def start(self) -> None:
         self._stop_event.clear()
+        drag_lost_frames = 0
+        scroll_delay = 0
 
-        cap = cv2.VideoCapture(0)
-        cap.set(3, self.cam_width)
-        cap.set(4, self.cam_height)
+        cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.cam_width)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.cam_height)
 
         if not cap.isOpened():
             logger.error("Failed to open camera.")
@@ -115,14 +118,18 @@ class VirtualMouseController:
             )
 
         detector = htm.handDetector(maxHands=1)
-        wScr, hScr = pyautogui.size()
+
+        # جلب أبعاد الشاشة باستخدام tkinter لتجنب الاعتماد على pyautogui
+        root = tk.Tk()
+        wScr = root.winfo_screenwidth()
+        hScr = root.winfo_screenheight()
+        root.destroy()
 
         plocX, plocY = 0.0, 0.0
         clocX, clocY = 0.0, 0.0
         pTime = 0.0
         clickDelay = 0
         dragging = False
-        drag_lost_frames = 0
         drag_change_frames = 0
 
         logger.info("Virtual Mouse started — show your hand to the camera.")
@@ -147,6 +154,7 @@ class VirtualMouseController:
                     actual_hand = None
 
                 if len(lmList) != 0:
+                    drag_lost_frames = 0
                     wrist_x, wrist_y = lmList[0][1], lmList[0][2]
 
                     middle_mcp_x = lmList[9][1] - wrist_x
@@ -183,74 +191,7 @@ class VirtualMouseController:
                         2,
                     )
 
-                    if prediction == "Move":
-
-                        if dragging:
-                            drag_change_frames += 1
-
-                            if drag_change_frames >= 2:
-                                pyautogui.mouseUp(button="left")
-                                dragging = False
-                                drag_change_frames = 0
-
-                        else:
-
-                            x3 = np.interp(
-                                x1,
-                                (self.FRAME_LEFT, self.cam_width - self.FRAME_RIGHT),
-                                (0, wScr),
-                            )
-                            y3 = np.interp(
-                                y1,
-                                (self.FRAME_TOP, self.cam_height - self.FRAME_BOTTOM),
-                                (0, hScr),
-                            )
-                            clocX = plocX + (x3 - plocX) / self._smoothening
-                            clocY = plocY + (y3 - plocY) / self._smoothening
-                            pyautogui.moveTo(clocX, clocY)
-                            cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
-                            plocX, plocY = clocX, clocY
-
-                    elif prediction == "Left_Click":
-                        cv2.circle(img, (x1, y1), 15, (0, 255, 0), cv2.FILLED)
-                        if clickDelay == 0:
-                            pyautogui.click(button="left")
-                            clickDelay = 8
-
-                    elif prediction == "Right_Click":
-                        cv2.circle(img, (x1, y1), 15, (0, 0, 255), cv2.FILLED)
-                        if clickDelay == 0:
-                            pyautogui.click(button="right")
-                            clickDelay = 8
-
-                    elif prediction == "Scroll":
-                        cv2.circle(img, (x1, y1), 15, (255, 255, 0), cv2.FILLED)
-                        centerY = self.cam_height / 2
-
-                        if y1 < (centerY - self._deadzone):
-                            pyautogui.scroll(self._scroll_speed)
-                            cv2.putText(
-                                img,
-                                "Scroll UP",
-                                (50, 100),
-                                cv2.FONT_HERSHEY_SIMPLEX,
-                                1,
-                                (255, 255, 0),
-                                2,
-                            )
-                        elif y1 > (centerY + self._deadzone):
-                            pyautogui.scroll(-self._scroll_speed)
-                            cv2.putText(
-                                img,
-                                "Scroll DOWN",
-                                (50, 150),
-                                cv2.FONT_HERSHEY_SIMPLEX,
-                                1,
-                                (255, 255, 0),
-                                2,
-                            )
-
-                    elif prediction == "Drag":
+                    if prediction == "Drag":
                         drag_change_frames = 0
                         x3 = np.interp(
                             x1,
@@ -266,12 +207,88 @@ class VirtualMouseController:
                         clocY = plocY + (y3 - plocY) / self._smoothening
 
                         if not dragging:
-                            pyautogui.mouseDown(button="left")
+                            mouse.press(Button.left)
                             dragging = True
 
-                        pyautogui.moveTo(clocX, clocY)
+                        mouse.position = (int(clocX), int(clocY))
                         cv2.circle(img, (x1, y1), 15, (0, 255, 255), cv2.FILLED)
                         plocX, plocY = clocX, clocY
+
+                    else:
+                        self._current_action = ""
+                        if dragging:
+                            drag_change_frames += 1
+                            if drag_change_frames >= 4:
+                                mouse.release(Button.left)
+                                dragging = False
+                                drag_change_frames = 0
+                        else:
+                            drag_change_frames = 0
+
+                        if prediction == "Move":
+                            x3 = np.interp(
+                                x1,
+                                (self.FRAME_LEFT, self.cam_width - self.FRAME_RIGHT),
+                                (0, wScr),
+                            )
+                            y3 = np.interp(
+                                y1,
+                                (self.FRAME_TOP, self.cam_height - self.FRAME_BOTTOM),
+                                (0, hScr),
+                            )
+                            clocX = plocX + (x3 - plocX) / self._smoothening
+                            clocY = plocY + (y3 - plocY) / self._smoothening
+
+                            mouse.position = (int(clocX), int(clocY))
+                            cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
+                            plocX, plocY = clocX, clocY
+
+                        elif prediction == "Left_Click":
+                            cv2.circle(img, (x1, y1), 15, (0, 255, 0), cv2.FILLED)
+                            if clickDelay == 0:
+                                mouse.click(Button.left, 1)
+                                clickDelay = 8
+
+                        elif prediction == "Right_Click":
+                            cv2.circle(img, (x1, y1), 15, (0, 0, 255), cv2.FILLED)
+                            if clickDelay == 0:
+                                mouse.click(Button.right, 1)
+                                clickDelay = 8
+
+                        elif prediction == "Scroll":
+                            cv2.circle(img, (x1, y1), 15, (255, 255, 0), cv2.FILLED)
+                            centerY = self.cam_height / 2
+
+                            delay_frames = max(0, 6 - self._scroll_speed)
+                            steps = max(1, self._scroll_speed - 5)
+
+                            if scroll_delay == 0:
+                                if y1 < (centerY - self._deadzone):
+                                    mouse.scroll(0, steps)
+                                    scroll_delay = delay_frames
+                                    cv2.putText(
+                                        img,
+                                        "Scroll UP",
+                                        (50, 100),
+                                        cv2.FONT_HERSHEY_SIMPLEX,
+                                        1,
+                                        (255, 255, 0),
+                                        2,
+                                    )
+                                elif y1 > (centerY + self._deadzone):
+                                    mouse.scroll(0, -steps)
+                                    scroll_delay = delay_frames
+                                    cv2.putText(
+                                        img,
+                                        "Scroll DOWN",
+                                        (50, 150),
+                                        cv2.FONT_HERSHEY_SIMPLEX,
+                                        1,
+                                        (255, 255, 0),
+                                        2,
+                                    )
+                            if scroll_delay > 0:
+                                scroll_delay -= 1
 
                     cv2.putText(
                         img,
@@ -284,6 +301,10 @@ class VirtualMouseController:
                     )
                 else:
                     self._current_action = ""
+                    if dragging:
+                        mouse.release(Button.left)
+                        dragging = False
+                        drag_change_frames = 0
 
                 if clickDelay > 0:
                     clickDelay -= 1
@@ -312,7 +333,7 @@ class VirtualMouseController:
             logger.exception("Unexpected error in Virtual Mouse loop")
         finally:
             if dragging:
-                pyautogui.mouseUp(button="left")
+                mouse.release(Button.left)
             cap.release()
             cv2.destroyAllWindows()
             self._current_action = ""

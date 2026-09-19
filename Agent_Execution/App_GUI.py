@@ -57,7 +57,7 @@ GESTURE_COLORS = {
 class VirtualMouseApp(ctk.CTk):
     """Premium dark-themed control panel for the AI Virtual Mouse."""
 
-    PREVIEW_W = 700
+    PREVIEW_W = 640
     PREVIEW_H = 500
     UPDATE_INTERVAL_MS = 30  # ~33 FPS GUI refresh
 
@@ -247,7 +247,7 @@ class VirtualMouseApp(ctk.CTk):
         )
         # Scroll Speed
         self.lbl_scroll_speed = self._make_slider_row(
-            card, "Scroll Speed", 10, 150, 50, self._on_scroll_speed, row=2
+            card, "Scroll Speed", 1, 10, 3, self._on_scroll_speed, row=2
         )
 
     def _make_slider_row(self, parent, label, from_, to, default, command, row):
@@ -265,11 +265,20 @@ class VirtualMouseApp(ctk.CTk):
         )
         name_lbl.pack(side="left")
 
+        val_lbl = ctk.CTkLabel(
+            frame,
+            text=str(int(default)),
+            font=("Segoe UI Semibold", 12),
+            text_color=TEXT_PRIMARY,
+            width=36,
+            anchor="e",
+        )
+
         slider = ctk.CTkSlider(
             frame,
             from_=from_,
             to=to,
-            command=command,
+            number_of_steps=int(to - from_),
             width=320,
             height=16,
             fg_color=DIVIDER,
@@ -279,16 +288,38 @@ class VirtualMouseApp(ctk.CTk):
         )
         slider.set(default)
         slider.pack(side="left", padx=(8, 8))
-
-        val_lbl = ctk.CTkLabel(
-            frame,
-            text=str(default),
-            font=("Segoe UI Semibold", 12),
-            text_color=TEXT_PRIMARY,
-            width=36,
-            anchor="e",
-        )
         val_lbl.pack(side="right")
+
+        # دالة تحديث فورية متزامنة
+        def _update_value(*args):
+            # قراءة القيمة الحالية للسلايدر فوراً
+            current_val = int(round(slider.get()))
+            val_lbl.configure(text=str(current_val))
+            if command:
+                command(current_val)
+
+        # 1. ربط المعامل command العادي
+        slider.configure(command=lambda _: _update_value())
+
+        # 2. إجبار السلايدر على التقاط أحداث حركة الفأرة حتى مع أبطأ حركة ممكنة
+        # نصل للكانفاس الداخلي الذي يرسم شريط السلايدر ونلتقط حركته
+        try:
+            internal_canvas = slider._canvas
+            internal_canvas.bind(
+                "<B1-Motion>", lambda e: self.after_idle(_update_value), add="+"
+            )
+            internal_canvas.bind(
+                "<Button-1>", lambda e: self.after_idle(_update_value), add="+"
+            )
+            internal_canvas.bind(
+                "<ButtonRelease-1>", lambda e: self.after_idle(_update_value), add="+"
+            )
+        except AttributeError:
+            # في حال اختلاف النسخة يتم الربط على الودجت الأساسي
+            slider.bind(
+                "<B1-Motion>", lambda e: self.after_idle(_update_value), add="+"
+            )
+            slider.bind("<Button-1>", lambda e: self.after_idle(_update_value), add="+")
 
         return val_lbl
 
@@ -382,20 +413,17 @@ class VirtualMouseApp(ctk.CTk):
     # Callbacks
     # ==================================================================
 
-    def _on_smooth(self, value) -> None:
-        v = int(value)
-        self.lbl_smooth.configure(text=str(v))
-        self.controller.smoothening = v
+    def _on_smooth(self, value: int) -> None:
+        if self.controller:
+            self.controller.smoothening = value
 
-    def _on_deadzone(self, value) -> None:
-        v = int(value)
-        self.lbl_deadzone.configure(text=str(v))
-        self.controller.deadzone = v
+    def _on_deadzone(self, value: int) -> None:
+        if self.controller:
+            self.controller.deadzone = value
 
-    def _on_scroll_speed(self, value) -> None:
-        v = int(value)
-        self.lbl_scroll_speed.configure(text=str(v))
-        self.controller.scroll_speed = v
+    def _on_scroll_speed(self, value: int) -> None:
+        if self.controller:
+            self.controller.scroll_speed = value
 
     def _toggle(self) -> None:
         if not self._is_active:

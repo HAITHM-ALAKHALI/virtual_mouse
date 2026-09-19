@@ -25,7 +25,7 @@ class handDetector:
         self.lmList: List[List[int]] = []
         self.results = None
 
-        if getattr(sys, "frozen", False):
+        if getattr(sys, "frozen", False): # exe
             base_path = sys._MEIPASS
         else:
             base_path = os.path.dirname(os.path.abspath(__file__))
