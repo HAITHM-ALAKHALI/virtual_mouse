@@ -81,10 +81,25 @@ class VirtualMouseController:
 
     @staticmethod
     def _load_model():
-        current_dir = os.path.dirname(__file__)
-        model_path = os.path.join(
-            current_dir, "..", "Model_Training", "virtual_mouse_brain.pkl"
-        )
+        # تحديد المجلد الأساسي بناءً على ما إذا كان الكود مجمعاً بـ PyInstaller أم يعمل في بيئة تطوير عادية
+        if getattr(sys, "frozen", False):
+            # مسار PyInstaller الداخلي
+            base_dir = getattr(sys, "_MEIPASS", os.path.dirname(sys.executable))
+            model_path = os.path.join(base_dir, "virtual_mouse_brain.pkl")
+        else:
+            # مسار بيئة التطوير الاعتيادي
+            current_dir = os.path.dirname(__file__)
+            model_path = os.path.join(
+                current_dir, "..", "Model_Training", "virtual_mouse_brain.pkl"
+            )
+
+        # التحقق الإضافي في حال وُضع الملف في نفس مجلد التشغيل مباشرة
+        if not os.path.isfile(model_path):
+            alt_path = os.path.join(
+                os.path.dirname(__file__), "virtual_mouse_brain.pkl"
+            )
+            if os.path.isfile(alt_path):
+                model_path = alt_path
 
         if not os.path.isfile(model_path):
             raise FileNotFoundError(
