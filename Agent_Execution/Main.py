@@ -81,19 +81,15 @@ class VirtualMouseController:
 
     @staticmethod
     def _load_model():
-        # تحديد المجلد الأساسي بناءً على ما إذا كان الكود مجمعاً بـ PyInstaller أم يعمل في بيئة تطوير عادية
         if getattr(sys, "frozen", False):
-            # مسار PyInstaller الداخلي
             base_dir = getattr(sys, "_MEIPASS", os.path.dirname(sys.executable))
             model_path = os.path.join(base_dir, "virtual_mouse_brain.pkl")
         else:
-            # مسار بيئة التطوير الاعتيادي
             current_dir = os.path.dirname(__file__)
             model_path = os.path.join(
                 current_dir, "..", "Model_Training", "virtual_mouse_brain.pkl"
             )
 
-        # التحقق الإضافي في حال وُضع الملف في نفس مجلد التشغيل مباشرة
         if not os.path.isfile(model_path):
             alt_path = os.path.join(
                 os.path.dirname(__file__), "virtual_mouse_brain.pkl"
@@ -134,8 +130,7 @@ class VirtualMouseController:
 
         detector = htm.handDetector(maxHands=1)
 
-        # جلب أبعاد الشاشة باستخدام tkinter لتجنب الاعتماد على pyautogui
-        root = tk.Tk()
+        root = tk.Tk() #الواجهة
         wScr = root.winfo_screenwidth()
         hScr = root.winfo_screenheight()
         root.destroy()
@@ -233,7 +228,7 @@ class VirtualMouseController:
                         self._current_action = ""
                         if dragging:
                             drag_change_frames += 1
-                            if drag_change_frames >= 4:
+                            if drag_change_frames >= 2:
                                 mouse.release(Button.left)
                                 dragging = False
                                 drag_change_frames = 0
@@ -262,13 +257,13 @@ class VirtualMouseController:
                             cv2.circle(img, (x1, y1), 15, (0, 255, 0), cv2.FILLED)
                             if clickDelay == 0:
                                 mouse.click(Button.left, 1)
-                                clickDelay = 8
+                                clickDelay = 10
 
                         elif prediction == "Right_Click":
                             cv2.circle(img, (x1, y1), 15, (0, 0, 255), cv2.FILLED)
                             if clickDelay == 0:
                                 mouse.click(Button.right, 1)
-                                clickDelay = 8
+                                clickDelay = 10
 
                         elif prediction == "Scroll":
                             cv2.circle(img, (x1, y1), 15, (255, 255, 0), cv2.FILLED)

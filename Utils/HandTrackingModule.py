@@ -64,7 +64,7 @@ class handDetector:
 
         self.max_lost_frames = 20
 
-        self.max_wrist_distance = 0.25
+        self.max_wrist_distance = 0.25 #%
 
         self.start_time = time.time()
         self.timestamp_ms = 0
