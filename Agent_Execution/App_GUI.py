@@ -249,11 +249,21 @@ class VirtualMouseApp(ctk.CTk):
         self.lbl_scroll_speed = self._make_slider_row(
             card, "Scroll Speed", 1, 10, 3, self._on_scroll_speed, row=2
         )
+        # clickDelay
+        self.lbl_clickDelay = self._make_slider_row(
+            card,
+            "Click Delay",
+            0,
+            20,
+            self.controller.clickDelay,
+            self._on_clickDelay,
+            row=3,
+        )
 
     def _make_slider_row(self, parent, label, from_, to, default, command, row):
         """Create a labelled slider row and return the value label."""
         frame = ctk.CTkFrame(parent, fg_color="transparent")
-        frame.pack(fill="x", padx=16, pady=(6 if row == 0 else 2, 6 if row == 2 else 2))
+        frame.pack(fill="x", padx=16, pady=(6 if row == 0 else 2, 6 if row == 3 else 2))
 
         name_lbl = ctk.CTkLabel(
             frame,
@@ -424,6 +434,10 @@ class VirtualMouseApp(ctk.CTk):
     def _on_scroll_speed(self, value: int) -> None:
         if self.controller:
             self.controller.scroll_speed = value
+
+    def _on_clickDelay(self, value: int) -> None:
+        if self.controller:
+            self.controller.clickDelay = value
 
     def _toggle(self) -> None:
         if not self._is_active:

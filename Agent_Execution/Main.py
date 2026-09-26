@@ -32,6 +32,7 @@ class VirtualMouseController:
         scroll_speed: int = 3,
         cam_width: int = 640,
         cam_height: int = 480,
+        clickDelay: int = 10,
     ) -> None:
         self._smoothening = smoothening
         self._deadzone = deadzone
@@ -45,6 +46,13 @@ class VirtualMouseController:
         self._current_action: str = ""
         self._current_fps: float = 0.0
 
+        self._clickDelay_raw: int = clickDelay
+        self._click_interval: float = max(0.05, clickDelay * 0.025)
+        self._right_clicked = False
+
+        self._last_left_click_time: float = 0.0
+        self._last_right_click_time: float = 0.0
+
         self._model = self._load_model()
 
     @property
@@ -54,6 +62,16 @@ class VirtualMouseController:
     @smoothening.setter
     def smoothening(self, value: int) -> None:
         self._smoothening = max(1, int(value))
+
+    @property
+    def clickDelay(self) -> int:
+        return self._clickDelay_raw
+
+    @clickDelay.setter
+    def clickDelay(self, value: int) -> None:
+        self._clickDelay_raw = max(0, int(value))
+        # التحديث اللحظي للفاصل الزمني بالثواني
+        self._click_interval = max(0.05, self._clickDelay_raw * 0.025)
 
     @property
     def deadzone(self) -> int:
@@ -130,7 +148,7 @@ class VirtualMouseController:
 
         detector = htm.handDetector(maxHands=1)
 
-        root = tk.Tk() #الواجهة
+        root = tk.Tk()
         wScr = root.winfo_screenwidth()
         hScr = root.winfo_screenheight()
         root.destroy()
@@ -138,7 +156,6 @@ class VirtualMouseController:
         plocX, plocY = 0.0, 0.0
         clocX, clocY = 0.0, 0.0
         pTime = 0.0
-        clickDelay = 0
         dragging = False
         drag_change_frames = 0
 
@@ -201,7 +218,10 @@ class VirtualMouseController:
                         2,
                     )
 
+                    now = time.time()
+
                     if prediction == "Drag":
+                        self._right_clicked = False
                         drag_change_frames = 0
                         x3 = np.interp(
                             x1,
@@ -225,7 +245,6 @@ class VirtualMouseController:
                         plocX, plocY = clocX, clocY
 
                     else:
-                        self._current_action = ""
                         if dragging:
                             drag_change_frames += 1
                             if drag_change_frames >= 2:
@@ -236,6 +255,7 @@ class VirtualMouseController:
                             drag_change_frames = 0
 
                         if prediction == "Move":
+                            self._right_clicked = False
                             x3 = np.interp(
                                 x1,
                                 (self.FRAME_LEFT, self.cam_width - self.FRAME_RIGHT),
@@ -254,18 +274,25 @@ class VirtualMouseController:
                             plocX, plocY = clocX, clocY
 
                         elif prediction == "Left_Click":
+                            self._right_clicked = False
                             cv2.circle(img, (x1, y1), 15, (0, 255, 0), cv2.FILLED)
-                            if clickDelay == 0:
+                            # تثبيت موقع المؤشر أثناء النقر لمنع إلغاء الـ Double Click
+                            mouse.position = (int(plocX), int(plocY))
+
+                            if now - self._last_left_click_time >= self._click_interval:
                                 mouse.click(Button.left, 1)
-                                clickDelay = 10
+                                self._last_left_click_time = now
 
                         elif prediction == "Right_Click":
                             cv2.circle(img, (x1, y1), 15, (0, 0, 255), cv2.FILLED)
-                            if clickDelay == 0:
+                            mouse.position = (int(plocX), int(plocY))
+
+                            if not self._right_clicked:
                                 mouse.click(Button.right, 1)
-                                clickDelay = 10
+                                self._right_clicked = True
 
                         elif prediction == "Scroll":
+                            self._right_clicked = False
                             cv2.circle(img, (x1, y1), 15, (255, 255, 0), cv2.FILLED)
                             centerY = self.cam_height / 2
 
@@ -311,13 +338,11 @@ class VirtualMouseController:
                     )
                 else:
                     self._current_action = ""
+                    self._right_clicked = False
                     if dragging:
                         mouse.release(Button.left)
                         dragging = False
                         drag_change_frames = 0
-
-                if clickDelay > 0:
-                    clickDelay -= 1
 
                 cTime = time.time()
                 if pTime != 0:
