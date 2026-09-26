@@ -9,6 +9,8 @@ import logging
 import threading
 from typing import Optional
 import tkinter as tk
+from collections import deque
+from datetime import datetime
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "Utils")))
 import HandTrackingModule as htm
@@ -49,9 +51,12 @@ class VirtualMouseController:
         self._clickDelay_raw: int = clickDelay
         self._click_interval: float = max(0.05, clickDelay * 0.025)
         self._right_clicked = False
-
         self._last_left_click_time: float = 0.0
         self._last_right_click_time: float = 0.0
+
+        self._event_log: deque = deque(maxlen=50)
+        self._log_lock = threading.Lock()
+        self._log_counter: int = 0
 
         self._model = self._load_model()
 
@@ -70,7 +75,6 @@ class VirtualMouseController:
     @clickDelay.setter
     def clickDelay(self, value: int) -> None:
         self._clickDelay_raw = max(0, int(value))
-        # التحديث اللحظي للفاصل الزمني بالثواني
         self._click_interval = max(0.05, self._clickDelay_raw * 0.025)
 
     @property
@@ -131,9 +135,23 @@ class VirtualMouseController:
         with self._frame_lock:
             return self._latest_frame.copy() if self._latest_frame is not None else None
 
+    def log_event(self, action: str, details: str = "") -> None:
+        timestamp = datetime.now().strftime("%H:%M:%S.%f")[:-3]
+        entry = f"[{timestamp}] {action:<12} | {details}"
+        with self._log_lock:
+            self._event_log.append(entry)
+            self._log_counter += 1
+
+    @property
+    def log_counter(self) -> int:
+        return self._log_counter
+
+    def get_latest_events(self) -> list:
+        with self._log_lock:
+            return list(self._event_log)
+
     def start(self) -> None:
         self._stop_event.clear()
-        drag_lost_frames = 0
         scroll_delay = 0
 
         cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
@@ -181,7 +199,6 @@ class VirtualMouseController:
                     actual_hand = None
 
                 if len(lmList) != 0:
-                    drag_lost_frames = 0
                     wrist_x, wrist_y = lmList[0][1], lmList[0][2]
 
                     middle_mcp_x = lmList[9][1] - wrist_x
@@ -239,6 +256,9 @@ class VirtualMouseController:
                         if not dragging:
                             mouse.press(Button.left)
                             dragging = True
+                            self.log_event(
+                                "DRAG_START", f"Anchor: ({int(clocX)}, {int(clocY)})"
+                            )
 
                         mouse.position = (int(clocX), int(clocY))
                         cv2.circle(img, (x1, y1), 15, (0, 255, 255), cv2.FILLED)
@@ -251,6 +271,10 @@ class VirtualMouseController:
                                 mouse.release(Button.left)
                                 dragging = False
                                 drag_change_frames = 0
+                                self.log_event(
+                                    "DRAG_DROP",
+                                    f"Released at: ({int(clocX)}, {int(clocY)})",
+                                )
                         else:
                             drag_change_frames = 0
 
@@ -276,12 +300,15 @@ class VirtualMouseController:
                         elif prediction == "Left_Click":
                             self._right_clicked = False
                             cv2.circle(img, (x1, y1), 15, (0, 255, 0), cv2.FILLED)
-                            # تثبيت موقع المؤشر أثناء النقر لمنع إلغاء الـ Double Click
                             mouse.position = (int(plocX), int(plocY))
 
                             if now - self._last_left_click_time >= self._click_interval:
                                 mouse.click(Button.left, 1)
                                 self._last_left_click_time = now
+                                self.log_event(
+                                    "LEFT_CLICK",
+                                    f"Pos: ({int(plocX)}, {int(plocY)}) | Debounce: {self._click_interval:.2f}s",
+                                )
 
                         elif prediction == "Right_Click":
                             cv2.circle(img, (x1, y1), 15, (0, 0, 255), cv2.FILLED)
@@ -290,6 +317,10 @@ class VirtualMouseController:
                             if not self._right_clicked:
                                 mouse.click(Button.right, 1)
                                 self._right_clicked = True
+                                self.log_event(
+                                    "RIGHT_CLICK",
+                                    f"Pos: ({int(plocX)}, {int(plocY)}) | Latched",
+                                )
 
                         elif prediction == "Scroll":
                             self._right_clicked = False
@@ -312,6 +343,10 @@ class VirtualMouseController:
                                         (255, 255, 0),
                                         2,
                                     )
+                                    self.log_event(
+                                        "SCROLL_UP",
+                                        f"Steps: {steps} | ΔY: {int(centerY - y1)}",
+                                    )
                                 elif y1 > (centerY + self._deadzone):
                                     mouse.scroll(0, -steps)
                                     scroll_delay = delay_frames
@@ -323,6 +358,10 @@ class VirtualMouseController:
                                         1,
                                         (255, 255, 0),
                                         2,
+                                    )
+                                    self.log_event(
+                                        "SCROLL_DOWN",
+                                        f"Steps: {steps} | ΔY: {int(y1 - centerY)}",
                                     )
                             if scroll_delay > 0:
                                 scroll_delay -= 1
@@ -373,6 +412,7 @@ class VirtualMouseController:
             cv2.destroyAllWindows()
             self._current_action = ""
             self._current_fps = 0.0
+            self._right_clicked = False
             with self._frame_lock:
                 self._latest_frame = None
             logger.info("Virtual Mouse stopped.")

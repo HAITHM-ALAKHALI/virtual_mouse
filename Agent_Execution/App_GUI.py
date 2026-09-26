@@ -12,6 +12,8 @@ import logging
 import cv2
 from PIL import Image, ImageTk
 from Main import VirtualMouseController
+from tkinter import filedialog, messagebox
+from datetime import datetime
 
 # ── Logging ──
 logging.basicConfig(
@@ -91,6 +93,7 @@ class VirtualMouseApp(ctk.CTk):
         self._build_camera_preview()
         self._build_status_bar()
         self._build_settings()
+        self._build_event_log()
         self._build_gesture_guide()
         self._build_footer()
 
@@ -333,6 +336,90 @@ class VirtualMouseApp(ctk.CTk):
 
         return val_lbl
 
+    def _build_event_log(self) -> None:
+        header_frame = ctk.CTkFrame(self.scroll_container, fg_color="transparent")
+        header_frame.pack(fill="x", padx=28, pady=(10, 0))
+
+        ctk.CTkLabel(
+            header_frame,
+            text="📋  Event Audit Log (Action Dispatcher Trace)",
+            font=("Segoe UI Semibold", 14),
+            text_color=TEXT_PRIMARY,
+            anchor="w",
+        ).pack(side="left")
+
+        # زر التصدير
+        ctk.CTkButton(
+            header_frame,
+            text="📥 Export Log",
+            font=("Segoe UI", 11, "bold"),
+            fg_color=CARD_BG,
+            hover_color=CARD_BORDER,
+            text_color=ACCENT,
+            border_width=1,
+            border_color=CARD_BORDER,
+            height=26,
+            width=90,
+            corner_radius=6,
+            command=self._export_log,
+        ).pack(side="right")
+
+        card = ctk.CTkFrame(
+            self.scroll_container,
+            fg_color=CARD_BG,
+            corner_radius=12,
+            border_width=1,
+            border_color=CARD_BORDER,
+        )
+        card.pack(fill="x", padx=24, pady=(4, 0))
+
+        self.txt_log = ctk.CTkTextbox(
+            card,
+            height=120,
+            font=("Consolas", 11),
+            text_color="#38BDF8",
+            fg_color="#0A0A0A",
+            border_width=1,
+            border_color=DIVIDER,
+            activate_scrollbars=True,
+        )
+        self.txt_log.pack(fill="both", padx=12, pady=10)
+        self.txt_log.insert("end", "[SYSTEM] Event audit trace ready...\n")
+        self.txt_log.configure(state="disabled")
+
+    def _export_log(self) -> None:
+        events = self.controller.get_latest_events()
+        if not events:
+            messagebox.showinfo("Export Log", "No events to export yet.")
+            return
+
+        default_name = f"mouse_audit_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+        file_path = filedialog.asksaveasfilename(
+            defaultextension=".txt",
+            initialfile=default_name,
+            filetypes=[
+                ("Text Files", "*.txt"),
+                ("Log Files", "*.log"),
+                ("All Files", "*.*"),
+            ],
+            title="Save Event Audit Log",
+        )
+
+        if file_path:
+            try:
+                with open(file_path, "w", encoding="utf-8") as f:
+                    f.write(f"=== AI Virtual Mouse Audit Trace ===\n")
+                    f.write(
+                        f"Exported at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+                    )
+                    f.write("=" * 40 + "\n\n")
+                    f.write("\n".join(events) + "\n")
+                messagebox.showinfo(
+                    "Success", f"Log successfully exported to:\n{file_path}"
+                )
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to save file: {e}")
+
     # ── Gesture Guide ────────────────────────────────────────────────
 
     def _build_gesture_guide(self) -> None:
@@ -511,6 +598,18 @@ class VirtualMouseApp(ctk.CTk):
 
             color = GESTURE_COLORS.get(action, TEXT_MUTED)
             self.action_label.configure(text=f"Action: {action}", text_color=color)
+
+            # --- تحديث شريط الأحداث الحي ---
+            if hasattr(self.controller, "get_latest_events"):
+                events = self.controller.get_latest_events()
+                # التحقق من وجود أحداث ومقارنة آخر سطر بدلاً من طول القائمة
+                if events and getattr(self, "_last_log_entry", None) != events[-1]:
+                    self.txt_log.configure(state="normal")
+                    self.txt_log.delete("1.0", "end")
+                    self.txt_log.insert("end", "\n".join(events) + "\n")
+                    self.txt_log.see("end")  # التمرير التلقائي لآخر سطر
+                    self.txt_log.configure(state="disabled")
+                    self._last_log_entry = events[-1]
 
         self._preview_job = self.after(
             self.UPDATE_INTERVAL_MS, self._start_preview_loop
