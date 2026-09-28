@@ -1,3 +1,31 @@
+"""
+Main — VirtualMouseController (Daemon Thread)
+
+Core vision-to-OS-event pipeline running in an isolated daemon thread.
+Decouples continuous spatial kinematics from deterministic action
+dispatching using the following mechanisms:
+
+  * Time-gated click debouncing:
+        T_interval = max(0.05, clickDelay * 0.025) s  (default 0.25 s)
+        evaluated via ``time.time()`` (wall-clock).
+  * Coordinate freezing:
+        During Left_Click / Right_Click, OS pointer remains at
+        (plocX, plocY) — the last stable Move / Drag coordinate.
+  * Context-menu latch (``_right_clicked``):
+        Set True on first Right_Click dispatch; reset only on
+        transition to Move / Left_Click / Drag / Scroll or hand loss.
+  * Drag hysteresis:
+        ``drag_change_frames >= 2`` consecutive non-Drag frames
+        required before Button.left is released.
+
+Thread-safety:
+  * ``_frame_lock`` (threading.Lock) guards ``_latest_frame``.
+  * ``_log_lock`` (threading.Lock) guards the circular ``_event_log``
+    deque(maxlen=20).
+  * The controller is started on a daemon thread via ``App_GUI.py``;
+    the GUI reads shared state through the lock-protected accessors.
+"""
+
 import cv2
 import numpy as np
 from pynput.mouse import Controller, Button
@@ -54,7 +82,7 @@ class VirtualMouseController:
         self._last_left_click_time: float = 0.0
         self._last_right_click_time: float = 0.0
 
-        self._event_log: deque = deque(maxlen=50)
+        self._event_log: deque = deque(maxlen=20)
         self._log_lock = threading.Lock()
         self._log_counter: int = 0
 

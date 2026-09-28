@@ -1,3 +1,21 @@
+"""
+Collect_Data — Gesture Landmark Data Collection Pipeline
+
+Captures 42-dimensional normalised landmark feature vectors from a live
+webcam feed and appends labelled rows to ``virtual_mouse_data.csv``.
+
+Normalisation steps (applied identically at inference time in Main.py):
+  1. Translation — wrist landmark (p0) is set as the coordinate origin.
+  2. Scale — Euclidean distance from wrist to middle-MCP joint (p9) is
+     used as the divisor for approximate scale invariance.
+  3. Handedness — x-coordinates are horizontally reflected (x <- -x)
+     when the detected physical hand is the left hand.
+
+Key bindings:
+  m -> Move | l -> Left_Click | r -> Right_Click
+  s -> Scroll | d -> Drag | n -> Neutral | q -> Quit
+"""
+
 import sys
 import os
 import math

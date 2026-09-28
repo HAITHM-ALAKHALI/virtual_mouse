@@ -131,15 +131,15 @@ class VirtualMouseApp(ctk.CTk):
             corner_radius=14,
             border_width=1,
             border_color=CARD_BORDER,
-            width=720,  # تحديد عرض ثابت للبطاقة الحاملة
+            width=720,  # Fixed width for the container card
             height=520,
         )
         self.preview_card.pack(fill="none", padx=24, pady=(8, 0))
         self.preview_card.pack_propagate(
             False
-        )  # لمنع تمدد البطاقة تلقائياً حسب المحتوى
+        )  # Prevent auto-expansion to fit content
 
-        # ضبط Label المعاينة في منتصف البطاقة تماماً وبأبعاد الكاميرا الفعلية
+        # Center the preview label within the card at actual camera dimensions
         self.preview_label = ctk.CTkLabel(
             self.preview_card,
             text="",
@@ -303,19 +303,19 @@ class VirtualMouseApp(ctk.CTk):
         slider.pack(side="left", padx=(8, 8))
         val_lbl.pack(side="right")
 
-        # دالة تحديث فورية متزامنة
+        # Synchronous immediate-update callback
         def _update_value(*args):
-            # قراءة القيمة الحالية للسلايدر فوراً
+            # Read the current slider value immediately
             current_val = int(round(slider.get()))
             val_lbl.configure(text=str(current_val))
             if command:
                 command(current_val)
 
-        # 1. ربط المعامل command العادي
+        # 1. Bind the standard slider command callback
         slider.configure(command=lambda _: _update_value())
 
-        # 2. إجبار السلايدر على التقاط أحداث حركة الفأرة حتى مع أبطأ حركة ممكنة
-        # نصل للكانفاس الداخلي الذي يرسم شريط السلايدر ونلتقط حركته
+        # 2. Force mouse-motion capture even at slow drag speeds.
+        # Bind the internal canvas that renders the slider track.
         try:
             internal_canvas = slider._canvas
             internal_canvas.bind(
@@ -328,7 +328,7 @@ class VirtualMouseApp(ctk.CTk):
                 "<ButtonRelease-1>", lambda e: self.after_idle(_update_value), add="+"
             )
         except AttributeError:
-            # في حال اختلاف النسخة يتم الربط على الودجت الأساسي
+            # Fallback: bind on the base widget if internal canvas is unavailable
             slider.bind(
                 "<B1-Motion>", lambda e: self.after_idle(_update_value), add="+"
             )
@@ -348,7 +348,7 @@ class VirtualMouseApp(ctk.CTk):
             anchor="w",
         ).pack(side="left")
 
-        # زر التصدير
+        # Export button
         ctk.CTkButton(
             header_frame,
             text="📥 Export Log",
@@ -599,15 +599,15 @@ class VirtualMouseApp(ctk.CTk):
             color = GESTURE_COLORS.get(action, TEXT_MUTED)
             self.action_label.configure(text=f"Action: {action}", text_color=color)
 
-            # --- تحديث شريط الأحداث الحي ---
+            # --- Update the live event-log strip ---
             if hasattr(self.controller, "get_latest_events"):
                 events = self.controller.get_latest_events()
-                # التحقق من وجود أحداث ومقارنة آخر سطر بدلاً من طول القائمة
+                # Compare the last entry to avoid redundant redraws
                 if events and getattr(self, "_last_log_entry", None) != events[-1]:
                     self.txt_log.configure(state="normal")
                     self.txt_log.delete("1.0", "end")
                     self.txt_log.insert("end", "\n".join(events) + "\n")
-                    self.txt_log.see("end")  # التمرير التلقائي لآخر سطر
+                    self.txt_log.see("end")  # Auto-scroll to the latest entry
                     self.txt_log.configure(state="disabled")
                     self._last_log_entry = events[-1]
 

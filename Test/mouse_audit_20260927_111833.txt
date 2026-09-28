@@ -1,0 +1,204 @@
+=== AI Virtual Mouse Audit Trace ===
+Exported at: 2026-09-27 11:18:35
+========================================
+
+[11:13:59.035] RIGHT_CLICK  | Pos: (683, 272) | Latched
+[11:14:00.586] LEFT_CLICK   | Pos: (642, 376) | Debounce: 0.25s
+[11:14:04.699] DRAG_START   | Anchor: (576, 873)
+[11:14:07.262] DRAG_DROP    | Released at: (1, 18)
+[11:14:09.034] LEFT_CLICK   | Pos: (668, 302) | Debounce: 0.25s
+[11:14:10.769] LEFT_CLICK   | Pos: (774, 533) | Debounce: 0.25s
+[11:14:11.068] LEFT_CLICK   | Pos: (774, 533) | Debounce: 0.25s
+[11:14:11.368] LEFT_CLICK   | Pos: (774, 533) | Debounce: 0.25s
+[11:14:11.667] LEFT_CLICK   | Pos: (774, 533) | Debounce: 0.25s
+[11:14:11.917] LEFT_CLICK   | Pos: (774, 533) | Debounce: 0.25s
+[11:14:12.201] LEFT_CLICK   | Pos: (774, 533) | Debounce: 0.25s
+[11:14:12.449] LEFT_CLICK   | Pos: (774, 533) | Debounce: 0.25s
+[11:14:12.735] LEFT_CLICK   | Pos: (774, 533) | Debounce: 0.25s
+[11:14:13.050] LEFT_CLICK   | Pos: (774, 533) | Debounce: 0.25s
+[11:14:13.364] LEFT_CLICK   | Pos: (774, 533) | Debounce: 0.25s
+[11:14:13.649] LEFT_CLICK   | Pos: (774, 533) | Debounce: 0.25s
+[11:14:13.967] LEFT_CLICK   | Pos: (774, 533) | Debounce: 0.25s
+[11:14:14.250] LEFT_CLICK   | Pos: (774, 533) | Debounce: 0.25s
+[11:14:14.564] LEFT_CLICK   | Pos: (774, 533) | Debounce: 0.25s
+[11:14:14.849] LEFT_CLICK   | Pos: (774, 533) | Debounce: 0.25s
+[11:14:15.099] LEFT_CLICK   | Pos: (774, 533) | Debounce: 0.25s
+[11:14:15.399] LEFT_CLICK   | Pos: (774, 533) | Debounce: 0.25s
+[11:14:15.650] LEFT_CLICK   | Pos: (774, 533) | Debounce: 0.25s
+[11:14:15.932] LEFT_CLICK   | Pos: (774, 533) | Debounce: 0.25s
+[11:14:16.232] LEFT_CLICK   | Pos: (774, 533) | Debounce: 0.25s
+[11:14:16.520] LEFT_CLICK   | Pos: (774, 533) | Debounce: 0.25s
+[11:14:16.771] LEFT_CLICK   | Pos: (774, 533) | Debounce: 0.25s
+[11:14:21.122] LEFT_CLICK   | Pos: (68, 182) | Debounce: 0.25s
+[11:14:21.415] LEFT_CLICK   | Pos: (68, 182) | Debounce: 0.25s
+[11:14:21.682] LEFT_CLICK   | Pos: (68, 182) | Debounce: 0.25s
+[11:14:21.950] LEFT_CLICK   | Pos: (68, 182) | Debounce: 0.25s
+[11:14:22.216] LEFT_CLICK   | Pos: (68, 182) | Debounce: 0.25s
+[11:14:26.111] LEFT_CLICK   | Pos: (124, 824) | Debounce: 0.25s
+[11:14:28.446] LEFT_CLICK   | Pos: (1078, 248) | Debounce: 0.25s
+[11:14:28.744] LEFT_CLICK   | Pos: (1078, 248) | Debounce: 0.25s
+[11:14:29.048] LEFT_CLICK   | Pos: (1078, 248) | Debounce: 0.25s
+[11:14:30.727] LEFT_CLICK   | Pos: (813, 311) | Debounce: 0.25s
+[11:14:31.027] LEFT_CLICK   | Pos: (813, 311) | Debounce: 0.25s
+[11:14:34.826] LEFT_CLICK   | Pos: (681, 429) | Debounce: 0.25s
+[11:14:35.126] LEFT_CLICK   | Pos: (681, 429) | Debounce: 0.25s
+[11:14:36.976] LEFT_CLICK   | Pos: (429, 410) | Debounce: 0.25s
+[11:14:37.292] LEFT_CLICK   | Pos: (429, 410) | Debounce: 0.25s
+[11:14:39.441] LEFT_CLICK   | Pos: (1433, 376) | Debounce: 0.25s
+[11:14:39.741] LEFT_CLICK   | Pos: (1433, 376) | Debounce: 0.25s
+[11:14:42.199] SCROLL_UP    | Steps: 1 | ΔY: 85
+[11:14:42.411] SCROLL_UP    | Steps: 1 | ΔY: 156
+[11:14:42.575] SCROLL_UP    | Steps: 1 | ΔY: 107
+[11:14:42.751] SCROLL_UP    | Steps: 1 | ΔY: 97
+[11:14:42.940] SCROLL_UP    | Steps: 1 | ΔY: 98
+[11:14:43.116] SCROLL_UP    | Steps: 1 | ΔY: 98
+[11:14:43.293] SCROLL_UP    | Steps: 1 | ΔY: 99
+[11:14:43.467] SCROLL_UP    | Steps: 1 | ΔY: 97
+[11:14:43.660] SCROLL_UP    | Steps: 1 | ΔY: 96
+[11:14:43.836] SCROLL_UP    | Steps: 1 | ΔY: 95
+[11:14:44.009] SCROLL_UP    | Steps: 1 | ΔY: 96
+[11:14:44.186] SCROLL_UP    | Steps: 1 | ΔY: 97
+[11:14:44.376] SCROLL_UP    | Steps: 1 | ΔY: 97
+[11:14:45.949] SCROLL_DOWN  | Steps: 1 | ΔY: 227
+[11:14:46.122] SCROLL_DOWN  | Steps: 1 | ΔY: 221
+[11:14:46.296] SCROLL_DOWN  | Steps: 1 | ΔY: 224
+[11:14:46.472] SCROLL_DOWN  | Steps: 1 | ΔY: 223
+[11:14:46.649] SCROLL_DOWN  | Steps: 1 | ΔY: 232
+[11:14:46.842] SCROLL_DOWN  | Steps: 1 | ΔY: 232
+[11:14:47.022] SCROLL_DOWN  | Steps: 1 | ΔY: 234
+[11:14:47.201] SCROLL_DOWN  | Steps: 1 | ΔY: 235
+[11:14:47.389] SCROLL_DOWN  | Steps: 1 | ΔY: 237
+[11:14:47.568] SCROLL_DOWN  | Steps: 1 | ΔY: 240
+[11:14:47.738] SCROLL_DOWN  | Steps: 1 | ΔY: 238
+[11:14:47.917] SCROLL_DOWN  | Steps: 1 | ΔY: 244
+[11:14:48.105] SCROLL_DOWN  | Steps: 1 | ΔY: 244
+[11:14:48.291] SCROLL_DOWN  | Steps: 1 | ΔY: 239
+[11:14:48.457] SCROLL_DOWN  | Steps: 1 | ΔY: 244
+[11:14:48.647] SCROLL_DOWN  | Steps: 1 | ΔY: 242
+[11:14:48.821] SCROLL_DOWN  | Steps: 1 | ΔY: 250
+[11:14:48.888] DRAG_START   | Anchor: (981, 634)
+[11:14:49.062] DRAG_DROP    | Released at: (976, 697)
+[11:14:49.372] DRAG_START   | Anchor: (724, 928)
+[11:14:49.655] DRAG_DROP    | Released at: (757, 998)
+[11:14:50.205] LEFT_CLICK   | Pos: (633, 1058) | Debounce: 0.25s
+[11:14:51.655] LEFT_CLICK   | Pos: (803, 726) | Debounce: 0.25s
+[11:14:51.771] RIGHT_CLICK  | Pos: (803, 726) | Latched
+[11:14:52.688] LEFT_CLICK   | Pos: (753, 787) | Debounce: 0.25s
+[11:14:55.637] DRAG_START   | Anchor: (791, 753)
+[11:15:01.878] DRAG_DROP    | Released at: (493, 241)
+[11:15:01.936] LEFT_CLICK   | Pos: (451, 211) | Debounce: 0.25s
+[11:15:02.236] LEFT_CLICK   | Pos: (451, 211) | Debounce: 0.25s
+[11:15:04.585] RIGHT_CLICK  | Pos: (997, 662) | Latched
+[11:15:05.485] LEFT_CLICK   | Pos: (892, 706) | Debounce: 0.25s
+[11:15:08.267] RIGHT_CLICK  | Pos: (926, 755) | Latched
+[11:15:08.380] SCROLL_DOWN  | Steps: 1 | ΔY: 222
+[11:15:08.552] SCROLL_DOWN  | Steps: 1 | ΔY: 226
+[11:15:08.727] SCROLL_DOWN  | Steps: 1 | ΔY: 228
+[11:15:09.816] DRAG_START   | Anchor: (553, 1036)
+[11:15:09.934] DRAG_DROP    | Released at: (561, 1034)
+[11:15:11.084] LEFT_CLICK   | Pos: (761, 792) | Debounce: 0.25s
+[11:15:13.146] SCROLL_DOWN  | Steps: 1 | ΔY: 122
+[11:15:13.247] SCROLL_DOWN  | Steps: 1 | ΔY: 164
+[11:15:13.352] SCROLL_DOWN  | Steps: 1 | ΔY: 206
+[11:15:13.438] SCROLL_DOWN  | Steps: 1 | ΔY: 226
+[11:15:13.546] SCROLL_DOWN  | Steps: 1 | ΔY: 231
+[11:15:13.653] SCROLL_DOWN  | Steps: 1 | ΔY: 224
+[11:15:13.743] SCROLL_DOWN  | Steps: 1 | ΔY: 216
+[11:15:13.837] SCROLL_DOWN  | Steps: 1 | ΔY: 212
+[11:15:13.943] SCROLL_DOWN  | Steps: 1 | ΔY: 212
+[11:15:14.050] SCROLL_DOWN  | Steps: 1 | ΔY: 214
+[11:15:14.154] SCROLL_DOWN  | Steps: 1 | ΔY: 208
+[11:15:14.252] SCROLL_DOWN  | Steps: 1 | ΔY: 205
+[11:15:14.339] SCROLL_DOWN  | Steps: 1 | ΔY: 207
+[11:15:14.449] SCROLL_DOWN  | Steps: 1 | ΔY: 207
+[11:15:14.542] SCROLL_DOWN  | Steps: 1 | ΔY: 206
+[11:15:14.641] SCROLL_DOWN  | Steps: 1 | ΔY: 206
+[11:15:14.731] SCROLL_DOWN  | Steps: 1 | ΔY: 207
+[11:15:14.840] SCROLL_DOWN  | Steps: 1 | ΔY: 207
+[11:15:14.936] SCROLL_DOWN  | Steps: 1 | ΔY: 204
+[11:15:15.249] DRAG_START   | Anchor: (846, 954)
+[11:15:15.304] DRAG_DROP    | Released at: (848, 959)
+[11:15:17.682] LEFT_CLICK   | Pos: (623, 14) | Debounce: 0.25s
+[11:15:19.733] LEFT_CLICK   | Pos: (618, 27) | Debounce: 0.25s
+[11:15:21.833] LEFT_CLICK   | Pos: (619, 21) | Debounce: 0.25s
+[11:15:24.481] LEFT_CLICK   | Pos: (1758, 0) | Debounce: 0.25s
+[11:15:28.013] LEFT_CLICK   | Pos: (1880, 8) | Debounce: 0.25s
+[11:15:31.912] LEFT_CLICK   | Pos: (1824, 652) | Debounce: 0.25s
+[11:15:32.930] LEFT_CLICK   | Pos: (1670, 851) | Debounce: 0.25s
+[11:15:37.311] LEFT_CLICK   | Pos: (1663, 591) | Debounce: 0.25s
+[11:15:40.443] LEFT_CLICK   | Pos: (1139, 643) | Debounce: 0.25s
+[11:15:44.646] LEFT_CLICK   | Pos: (55, 929) | Debounce: 0.25s
+[11:15:44.895] LEFT_CLICK   | Pos: (55, 929) | Debounce: 0.25s
+[11:15:45.146] LEFT_CLICK   | Pos: (55, 929) | Debounce: 0.25s
+[11:15:45.412] LEFT_CLICK   | Pos: (55, 929) | Debounce: 0.25s
+[11:15:50.824] LEFT_CLICK   | Pos: (123, 299) | Debounce: 0.25s
+[11:15:53.522] DRAG_START   | Anchor: (184, 337)
+[11:15:54.605] DRAG_DROP    | Released at: (488, 572)
+[11:15:55.573] LEFT_CLICK   | Pos: (224, 387) | Debounce: 0.25s
+[11:15:58.571] DRAG_START   | Anchor: (161, 333)
+[11:16:00.566] DRAG_DROP    | Released at: (579, 842)
+[11:16:00.622] DRAG_START   | Anchor: (517, 808)
+[11:16:04.822] DRAG_DROP    | Released at: (763, 721)
+[11:16:06.387] LEFT_CLICK   | Pos: (678, 749) | Debounce: 0.25s
+[11:16:06.654] LEFT_CLICK   | Pos: (678, 749) | Debounce: 0.25s
+[11:16:47.611] LEFT_CLICK   | Pos: (773, 730) | Debounce: 0.25s
+[11:16:50.427] LEFT_CLICK   | Pos: (1475, 120) | Debounce: 0.25s
+[11:16:53.043] DRAG_START   | Anchor: (145, 926)
+[11:16:53.100] DRAG_DROP    | Released at: (137, 925)
+[11:16:54.191] DRAG_START   | Anchor: (98, 953)
+[11:16:54.260] DRAG_DROP    | Released at: (94, 951)
+[11:16:54.310] RIGHT_CLICK  | Pos: (92, 948) | Latched
+[11:16:56.889] LEFT_CLICK   | Pos: (52, 929) | Debounce: 0.25s
+[11:16:57.841] DRAG_START   | Anchor: (115, 940)
+[11:17:00.827] DRAG_DROP    | Released at: (588, 318)
+[11:17:03.857] RIGHT_CLICK  | Pos: (539, 342) | Latched
+[11:17:08.055] LEFT_CLICK   | Pos: (903, 220) | Debounce: 0.25s
+[11:17:10.938] LEFT_CLICK   | Pos: (1013, 618) | Debounce: 0.25s
+[11:17:11.259] LEFT_CLICK   | Pos: (1013, 618) | Debounce: 0.25s
+[11:17:12.272] LEFT_CLICK   | Pos: (667, 440) | Debounce: 0.25s
+[11:17:12.524] LEFT_CLICK   | Pos: (667, 440) | Debounce: 0.25s
+[11:17:12.806] LEFT_CLICK   | Pos: (667, 440) | Debounce: 0.25s
+[11:17:13.106] LEFT_CLICK   | Pos: (667, 440) | Debounce: 0.25s
+[11:17:13.421] LEFT_CLICK   | Pos: (667, 440) | Debounce: 0.25s
+[11:17:13.706] LEFT_CLICK   | Pos: (667, 440) | Debounce: 0.25s
+[11:17:14.021] LEFT_CLICK   | Pos: (667, 440) | Debounce: 0.25s
+[11:17:14.305] LEFT_CLICK   | Pos: (667, 440) | Debounce: 0.25s
+[11:17:14.557] LEFT_CLICK   | Pos: (667, 440) | Debounce: 0.25s
+[11:17:15.955] RIGHT_CLICK  | Pos: (618, 569) | Latched
+[11:17:18.000] LEFT_CLICK   | Pos: (580, 736) | Debounce: 0.25s
+[11:17:19.353] DRAG_START   | Anchor: (409, 914)
+[11:17:22.302] DRAG_DROP    | Released at: (1, 31)
+[11:17:24.537] LEFT_CLICK   | Pos: (862, 258) | Debounce: 0.25s
+[11:17:26.749] DRAG_START   | Anchor: (611, 49)
+[11:17:28.884] DRAG_DROP    | Released at: (57, 959)
+[11:17:28.900] LEFT_CLICK   | Pos: (57, 959) | Debounce: 0.25s
+[11:17:32.150] LEFT_CLICK   | Pos: (1047, 452) | Debounce: 0.25s
+[11:17:33.006] SCROLL_UP    | Steps: 1 | ΔY: 64
+[11:17:33.096] SCROLL_UP    | Steps: 1 | ΔY: 91
+[11:17:33.275] SCROLL_UP    | Steps: 1 | ΔY: 111
+[11:17:33.447] SCROLL_UP    | Steps: 1 | ΔY: 115
+[11:17:33.641] SCROLL_UP    | Steps: 1 | ΔY: 118
+[11:17:33.813] SCROLL_UP    | Steps: 1 | ΔY: 119
+[11:17:33.991] SCROLL_UP    | Steps: 1 | ΔY: 116
+[11:17:34.183] SCROLL_UP    | Steps: 1 | ΔY: 113
+[11:17:34.361] SCROLL_UP    | Steps: 1 | ΔY: 91
+[11:17:34.664] SCROLL_DOWN  | Steps: 1 | ΔY: 64
+[11:17:34.838] SCROLL_DOWN  | Steps: 1 | ΔY: 104
+[11:17:35.015] SCROLL_DOWN  | Steps: 1 | ΔY: 142
+[11:17:35.206] SCROLL_DOWN  | Steps: 1 | ΔY: 158
+[11:17:35.302] SCROLL_DOWN  | Steps: 1 | ΔY: 162
+[11:17:35.399] SCROLL_DOWN  | Steps: 1 | ΔY: 164
+[11:17:35.497] SCROLL_DOWN  | Steps: 1 | ΔY: 164
+[11:17:35.591] SCROLL_DOWN  | Steps: 1 | ΔY: 165
+[11:17:35.702] SCROLL_DOWN  | Steps: 1 | ΔY: 166
+[11:17:35.799] SCROLL_DOWN  | Steps: 1 | ΔY: 169
+[11:17:35.894] SCROLL_DOWN  | Steps: 1 | ΔY: 166
+[11:17:35.999] SCROLL_DOWN  | Steps: 1 | ΔY: 168
+[11:17:36.102] SCROLL_DOWN  | Steps: 1 | ΔY: 168
+[11:17:38.664] LEFT_CLICK   | Pos: (1815, 579) | Debounce: 0.25s
+[11:17:41.363] LEFT_CLICK   | Pos: (1704, 582) | Debounce: 0.25s
+[11:17:43.180] LEFT_CLICK   | Pos: (1130, 646) | Debounce: 0.25s
+[11:18:22.477] RIGHT_CLICK  | Pos: (45, 941) | Latched
+[11:18:27.320] LEFT_CLICK   | Pos: (414, 979) | Debounce: 0.25s
+[11:18:27.593] LEFT_CLICK   | Pos: (414, 979) | Debounce: 0.25s
+[11:18:30.452] LEFT_CLICK   | Pos: (1027, 625) | Debounce: 0.25s

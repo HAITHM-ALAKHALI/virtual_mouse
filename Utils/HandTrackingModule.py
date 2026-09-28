@@ -1,3 +1,21 @@
+"""
+HandTrackingModule — MediaPipe Hand Landmark Detector & Anchor Tracker
+
+Wraps the MediaPipe Tasks HandLandmarker (``RunningMode.VIDEO``) with a
+temporal anchor-tracking state machine for robust single-hand selection.
+
+Anchor tracking parameters (normalised image coordinates):
+  * ``max_wrist_distance = 0.25``  (D_max)  — maximum Euclidean distance
+    between consecutive wrist positions to accept a hand as the same target.
+  * ``max_lost_frames = 20``  (M_lost) — number of consecutive frames the
+    anchor is retained after tracking loss before reset.
+
+Coordinate spaces:
+  * ``findPosition()`` returns pixel coordinates [id, cx, cy] where
+    cx = lm.x * img_width, cy = lm.y * img_height.
+  * Raw MediaPipe landmarks are in [0, 1] normalised image coordinates.
+"""
+
 import cv2
 import mediapipe as mp
 import math
