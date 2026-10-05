@@ -1,0 +1,24 @@
+=== AI Virtual Mouse Audit Trace ===
+Exported at: 2026-09-30 05:42:20
+========================================
+
+[05:41:37.433] SCROLL_UP    | Steps: 1 | ΔY: 79
+[05:41:37.529] SCROLL_UP    | Steps: 1 | ΔY: 90
+[05:41:37.625] SCROLL_UP    | Steps: 1 | ΔY: 97
+[05:41:37.737] SCROLL_UP    | Steps: 1 | ΔY: 102
+[05:41:37.833] SCROLL_UP    | Steps: 1 | ΔY: 104
+[05:41:37.929] SCROLL_UP    | Steps: 1 | ΔY: 106
+[05:41:38.025] SCROLL_UP    | Steps: 1 | ΔY: 106
+[05:41:38.138] SCROLL_UP    | Steps: 1 | ΔY: 105
+[05:41:38.237] SCROLL_UP    | Steps: 1 | ΔY: 105
+[05:41:38.330] SCROLL_UP    | Steps: 1 | ΔY: 105
+[05:41:38.429] SCROLL_UP    | Steps: 1 | ΔY: 104
+[05:41:38.522] SCROLL_UP    | Steps: 1 | ΔY: 102
+[05:41:38.646] SCROLL_UP    | Steps: 1 | ΔY: 101
+[05:41:38.729] SCROLL_UP    | Steps: 1 | ΔY: 98
+[05:41:38.833] SCROLL_UP    | Steps: 1 | ΔY: 96
+[05:41:38.921] SCROLL_UP    | Steps: 1 | ΔY: 88
+[05:41:39.033] SCROLL_UP    | Steps: 1 | ΔY: 65
+[05:41:39.239] DRAG_START   | Anchor: (939, 970)
+[05:41:41.788] DRAG_START   | Anchor: (1144, 996)
+[05:41:41.849] DRAG_DROP    | Released at: (1202, 1008)

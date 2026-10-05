@@ -1,0 +1,24 @@
+=== AI Virtual Mouse Audit Trace ===
+Exported at: 2026-09-30 08:30:08
+========================================
+
+[08:29:36.787] DRAG_START   | Anchor: (1058, 603)
+[08:29:37.263] DRAG_DROP    | Released at: (1010, 780)
+[08:29:38.003] SCROLL_UP    | Steps: 1 | ΔY: 65
+[08:29:38.095] SCROLL_UP    | Steps: 1 | ΔY: 80
+[08:29:38.202] SCROLL_UP    | Steps: 1 | ΔY: 91
+[08:29:38.321] SCROLL_UP    | Steps: 1 | ΔY: 100
+[08:29:38.498] SCROLL_UP    | Steps: 1 | ΔY: 106
+[08:29:38.656] SCROLL_UP    | Steps: 1 | ΔY: 104
+[08:29:38.842] SCROLL_UP    | Steps: 1 | ΔY: 92
+[08:29:38.904] RIGHT_CLICK  | Pos: (1010, 780) | Latched
+[08:29:39.138] LEFT_CLICK   | Pos: (1010, 780) | Debounce: 0.25s
+[08:29:39.426] LEFT_CLICK   | Pos: (1010, 780) | Debounce: 0.25s
+[08:29:39.688] LEFT_CLICK   | Pos: (1010, 780) | Debounce: 0.25s
+[08:29:39.968] DRAG_START   | Anchor: (993, 778)
+[08:29:41.489] LEFT_CLICK   | Pos: (768, 1002) | Debounce: 0.25s
+[08:29:41.757] LEFT_CLICK   | Pos: (768, 1002) | Debounce: 0.25s
+[08:29:41.780] RIGHT_CLICK  | Pos: (768, 1002) | Latched
+[08:29:41.966] SCROLL_UP    | Steps: 1 | ΔY: 142
+[08:29:42.058] SCROLL_UP    | Steps: 1 | ΔY: 124
+[08:29:42.179] SCROLL_UP    | Steps: 1 | ΔY: 109
