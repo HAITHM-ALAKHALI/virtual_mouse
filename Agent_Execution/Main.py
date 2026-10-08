@@ -330,12 +330,21 @@ class VirtualMouseController:
                             cv2.circle(img, (x1, y1), 15, (0, 255, 0), cv2.FILLED)
                             mouse.position = (int(plocX), int(plocY))
 
-                            if now - self._last_left_click_time >= self._click_interval:
+                            time_diff = now - self._last_left_click_time
+
+                            if time_diff >= self._click_interval:
                                 mouse.click(Button.left, 1)
                                 self._last_left_click_time = now
                                 self.log_event(
                                     "LEFT_CLICK",
                                     f"Pos: ({int(plocX)}, {int(plocY)}) | Debounce: {self._click_interval:.2f}s",
+                                )
+                            else:
+                                # تسجيل الحدث المستبعد بسبب مؤقت الـ Debounce
+                                remaining = self._click_interval - time_diff
+                                self.log_event(
+                                    "SUPPRESSED",
+                                    f"LEFT_CLICK cooldown | Held: {remaining:.3f}s remaining",
                                 )
 
                         elif prediction == "Right_Click":
