@@ -1,0 +1,172 @@
+=== AI Virtual Mouse Audit Trace ===
+Exported at: 2026-10-12 22:49:19
+========================================
+
+[22:48:39.271] LEFT_CLICK             | Pos: (813, 332) | Debounce: 0.25s
+[22:48:39.317] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.182s remaining
+[22:48:39.361] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.138s remaining
+[22:48:39.442] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.057s remaining
+[22:48:39.495] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.003s remaining
+[22:48:39.561] LEFT_CLICK             | Pos: (813, 332) | Debounce: 0.25s
+[22:48:39.624] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.172s remaining
+[22:48:39.674] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.123s remaining
+[22:48:39.718] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.079s remaining
+[22:48:39.783] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.014s remaining
+[22:48:39.862] LEFT_CLICK             | Pos: (813, 332) | Debounce: 0.25s
+[22:48:39.909] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.192s remaining
+[22:48:39.954] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.147s remaining
+[22:48:40.020] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.081s remaining
+[22:48:40.081] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.019s remaining
+[22:48:40.163] LEFT_CLICK             | Pos: (813, 332) | Debounce: 0.25s
+[22:48:40.212] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.192s remaining
+[22:48:40.273] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.131s remaining
+[22:48:40.322] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.082s remaining
+[22:48:40.427] LEFT_CLICK             | Pos: (813, 332) | Debounce: 0.25s
+[22:48:40.443] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.215s remaining
+[22:48:40.497] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.160s remaining
+[22:48:40.563] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.094s remaining
+[22:48:40.630] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.027s remaining
+[22:48:40.694] LEFT_CLICK             | Pos: (813, 332) | Debounce: 0.25s
+[22:48:40.778] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.154s remaining
+[22:48:40.821] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.111s remaining
+[22:48:40.869] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.063s remaining
+[22:48:40.964] LEFT_CLICK             | Pos: (813, 332) | Debounce: 0.25s
+[22:48:40.996] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.198s remaining
+[22:48:41.049] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.144s remaining
+[22:48:41.108] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.085s remaining
+[22:48:41.190] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.004s remaining
+[22:48:41.227] LEFT_CLICK             | Pos: (813, 332) | Debounce: 0.25s
+[22:48:41.284] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.185s remaining
+[22:48:41.349] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.119s remaining
+[22:48:41.418] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.051s remaining
+[22:48:41.455] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.014s remaining
+[22:48:41.547] LEFT_CLICK             | Pos: (813, 332) | Debounce: 0.25s
+[22:48:41.604] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.184s remaining
+[22:48:41.658] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.130s remaining
+[22:48:41.703] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.085s remaining
+[22:48:41.780] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.007s remaining
+[22:48:41.844] LEFT_CLICK             | Pos: (813, 332) | Debounce: 0.25s
+[22:48:41.895] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.190s remaining
+[22:48:41.961] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.124s remaining
+[22:48:42.000] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.085s remaining
+[22:48:42.066] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.019s remaining
+[22:48:42.145] LEFT_CLICK             | Pos: (813, 332) | Debounce: 0.25s
+[22:48:42.177] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.207s remaining
+[22:48:42.244] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.140s remaining
+[22:48:42.323] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.061s remaining
+[22:48:42.377] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.007s remaining
+[22:48:42.444] LEFT_CLICK             | Pos: (813, 332) | Debounce: 0.25s
+[22:48:42.498] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.184s remaining
+[22:48:42.581] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.101s remaining
+[22:48:42.612] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.070s remaining
+[22:48:44.194] RIGHT_CLICK            | Pos: (837, 373) | Latched
+[22:48:44.228] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:44.294] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:44.360] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:44.419] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:44.465] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:44.537] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:44.606] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:44.676] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:44.725] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:44.781] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:44.853] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:44.903] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:44.949] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:45.034] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:45.076] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:45.138] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:45.187] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:45.251] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:45.319] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:45.412] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:45.448] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:45.501] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:45.577] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:45.635] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:45.684] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:45.737] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:45.820] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:45.858] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:45.928] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:45.989] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:46.033] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:46.096] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:46.177] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:46.237] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:46.276] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:46.357] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:46.425] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:46.452] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:46.520] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:46.593] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:46.650] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:46.689] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:46.760] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:46.823] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:46.885] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:46.955] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:47.021] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:47.065] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:47.156] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:47.192] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:47.245] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:47.304] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:47.373] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (837, 373)
+[22:48:48.178] LEFT_CLICK             | Pos: (792, 412) | Debounce: 0.25s
+[22:48:48.194] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.211s remaining
+[22:48:48.262] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.143s remaining
+[22:48:49.497] RIGHT_CLICK            | Pos: (825, 431) | Latched
+[22:48:49.539] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (825, 431)
+[22:48:49.593] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (825, 431)
+[22:48:49.654] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (825, 431)
+[22:48:49.698] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (825, 431)
+[22:48:49.766] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (825, 431)
+[22:48:49.828] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (825, 431)
+[22:48:49.897] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (825, 431)
+[22:48:49.942] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (825, 431)
+[22:48:50.023] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (825, 431)
+[22:48:50.085] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (825, 431)
+[22:48:50.128] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (825, 431)
+[22:48:50.195] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (825, 431)
+[22:48:50.261] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (825, 431)
+[22:48:50.314] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (825, 431)
+[22:48:50.371] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (825, 431)
+[22:48:50.430] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (825, 431)
+[22:48:50.480] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (825, 431)
+[22:48:50.545] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (825, 431)
+[22:48:50.612] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (825, 431)
+[22:48:50.675] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (825, 431)
+[22:48:50.726] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (825, 431)
+[22:48:50.809] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (825, 431)
+[22:48:50.861] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (825, 431)
+[22:48:52.741] LEFT_CLICK             | Pos: (935, 542) | Debounce: 0.25s
+[22:48:52.770] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.214s remaining
+[22:48:52.840] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.143s remaining
+[22:48:52.897] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.086s remaining
+[22:48:54.239] DRAG_START             | Anchor: (827, 362)
+[22:48:57.226] DRAG_DROP              | Released at: (1, 857)
+[22:49:01.990] LEFT_CLICK             | Pos: (811, 325) | Debounce: 0.25s
+[22:49:02.037] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.183s remaining
+[22:49:02.100] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.119s remaining
+[22:49:04.389] SUPPRESSED             | SCROLL within deadzone | ΔY: 50 (Threshold: 60)
+[22:49:04.439] SCROLL_UP              | Steps: 1 | ΔY: 63
+[22:49:04.647] SCROLL_UP              | Steps: 1 | ΔY: 96
+[22:49:04.825] SCROLL_UP              | Steps: 1 | ΔY: 123
+[22:49:04.980] SCROLL_UP              | Steps: 1 | ΔY: 133
+[22:49:05.153] SCROLL_UP              | Steps: 1 | ΔY: 139
+[22:49:05.365] SCROLL_UP              | Steps: 1 | ΔY: 141
+[22:49:05.548] SCROLL_UP              | Steps: 1 | ΔY: 140
+[22:49:05.721] SCROLL_UP              | Steps: 1 | ΔY: 94
+[22:49:05.898] SUPPRESSED             | SCROLL within deadzone | ΔY: 13 (Threshold: 60)
+[22:49:05.940] SUPPRESSED             | SCROLL within deadzone | ΔY: 6 (Threshold: 60)
+[22:49:06.002] SUPPRESSED             | SCROLL within deadzone | ΔY: -1 (Threshold: 60)
+[22:49:06.081] SUPPRESSED             | SCROLL within deadzone | ΔY: -8 (Threshold: 60)
+[22:49:06.146] SUPPRESSED             | SCROLL within deadzone | ΔY: -12 (Threshold: 60)
+[22:49:06.177] SUPPRESSED             | SCROLL within deadzone | ΔY: -15 (Threshold: 60)
+[22:49:06.267] SUPPRESSED             | SCROLL within deadzone | ΔY: -16 (Threshold: 60)
+[22:49:06.334] SUPPRESSED             | SCROLL within deadzone | ΔY: -18 (Threshold: 60)
+[22:49:06.374] SUPPRESSED             | SCROLL within deadzone | ΔY: -18 (Threshold: 60)
+[22:49:06.418] SUPPRESSED             | SCROLL within deadzone | ΔY: -17 (Threshold: 60)
+[22:49:06.484] SUPPRESSED             | SCROLL within deadzone | ΔY: -16 (Threshold: 60)
+[22:49:06.546] SUPPRESSED             | SCROLL within deadzone | ΔY: -14 (Threshold: 60)

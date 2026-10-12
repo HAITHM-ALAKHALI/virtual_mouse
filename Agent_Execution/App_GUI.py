@@ -15,6 +15,8 @@ from Main import VirtualMouseController
 from tkinter import filedialog, messagebox
 from datetime import datetime
 
+
+
 # ── Logging ──
 logging.basicConfig(
     level=logging.INFO,
@@ -388,7 +390,12 @@ class VirtualMouseApp(ctk.CTk):
         self.txt_log.configure(state="disabled")
 
     def _export_log(self) -> None:
-        events = self.controller.get_latest_events()
+        # قراءة سجل الجلسة الكامل بدلاً من الأحداث الأخيرة فقط
+        events = (
+            self.controller.get_all_session_events()
+            if hasattr(self.controller, "get_all_session_events")
+            else self.controller.get_latest_events()
+        )
         if not events:
             messagebox.showinfo("Export Log", "No events to export yet.")
             return

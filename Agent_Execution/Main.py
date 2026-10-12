@@ -40,6 +40,8 @@ import tkinter as tk
 from collections import deque
 from datetime import datetime
 
+AUDIT_LOG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "mouse_audit.txt")
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "Utils")))
 import HandTrackingModule as htm
 
@@ -70,6 +72,8 @@ class VirtualMouseController:
         self.cam_width = cam_width
         self.cam_height = cam_height
 
+        self._scroll_delay = 0
+
         self._stop_event = threading.Event()
         self._latest_frame = None
         self._frame_lock = threading.Lock()
@@ -87,6 +91,13 @@ class VirtualMouseController:
         self._log_counter: int = 0
 
         self._model = self._load_model()
+
+        # طابور بحد أقصى 20 لعرض آخر الأحداث في الواجهة فقط دون إبطائها
+        self._event_log: deque = deque(maxlen=20)
+        # قائمة كاملة تحفظ كل أحداث الجلسة من البداية للتصدير عند الطلب
+        self._full_session_log: list = []
+        self._log_lock = threading.Lock()
+        self._log_counter: int = 0
 
     @property
     def smoothening(self) -> int:
@@ -165,9 +176,10 @@ class VirtualMouseController:
 
     def log_event(self, action: str, details: str = "") -> None:
         timestamp = datetime.now().strftime("%H:%M:%S.%f")[:-3]
-        entry = f"[{timestamp}] {action:<12} | {details}"
+        entry = f"[{timestamp}] {action:<22} | {details}"
         with self._log_lock:
             self._event_log.append(entry)
+            self._full_session_log.append(entry)
             self._log_counter += 1
 
     @property
@@ -178,9 +190,16 @@ class VirtualMouseController:
         with self._log_lock:
             return list(self._event_log)
 
+    def get_all_session_events(self) -> list:
+        with self._log_lock:
+            return list(self._full_session_log)
+
     def start(self) -> None:
         self._stop_event.clear()
-        scroll_delay = 0
+
+        with self._log_lock:
+            self._full_session_log.clear()
+            self._event_log.clear()
 
         cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.cam_width)
@@ -191,6 +210,16 @@ class VirtualMouseController:
             raise RuntimeError(
                 "Could not open the webcam. Check your camera connection."
             )
+
+        # ==========================================
+        # ABLATION BENCHMARK FLAGS (للتجارب العلمية)
+        # ==========================================
+        ENABLE_COORD_FREEZE = True
+        ENABLE_TIME_DEBOUNCE = True
+        ENABLE_MENU_LATCH = True
+        ENABLE_DRAG_HYSTERESIS = True
+        ENABLE_SCROLL_DEADZONE = True
+        ENABLE_SMOOTHING = True
 
         detector = htm.handDetector(maxHands=1)
 
@@ -265,9 +294,13 @@ class VirtualMouseController:
 
                     now = time.time()
 
+                    # =========================================================================
+                    # 1. حالة السحب (Drag State Machine & Kinematics)
+                    # =========================================================================
                     if prediction == "Drag":
                         self._right_clicked = False
                         drag_change_frames = 0
+
                         x3 = np.interp(
                             x1,
                             (self.FRAME_LEFT, self.cam_width - self.FRAME_RIGHT),
@@ -278,8 +311,12 @@ class VirtualMouseController:
                             (self.FRAME_TOP, self.cam_height - self.FRAME_BOTTOM),
                             (0, hScr),
                         )
-                        clocX = plocX + (x3 - plocX) / self._smoothening
-                        clocY = plocY + (y3 - plocY) / self._smoothening
+
+                        if ENABLE_SMOOTHING:
+                            clocX = plocX + (x3 - plocX) / self._smoothening
+                            clocY = plocY + (y3 - plocY) / self._smoothening
+                        else:
+                            clocX, clocY = x3, y3
 
                         if not dragging:
                             mouse.press(Button.left)
@@ -293,21 +330,37 @@ class VirtualMouseController:
                         plocX, plocY = clocX, clocY
 
                     else:
+                        # =====================================================================
+                        # 2. إنهاء السحب بمرشح التخلف الزمني (Drag Release via Hysteresis)
+                        # =====================================================================
                         if dragging:
-                            drag_change_frames += 1
-                            if drag_change_frames >= 2:
+                            if ENABLE_DRAG_HYSTERESIS:
+                                drag_change_frames += 1
+                                if drag_change_frames >= 2:
+                                    mouse.release(Button.left)
+                                    dragging = False
+                                    drag_change_frames = 0
+                                    self.log_event(
+                                        "DRAG_DROP",
+                                        f"Released at: ({int(clocX)}, {int(clocY)})",
+                                    )
+                            else:
+                                # Baseline: إفلات فوري بمجرد وميض إطار واحد (سقوط عرضي)
                                 mouse.release(Button.left)
                                 dragging = False
-                                drag_change_frames = 0
                                 self.log_event(
-                                    "DRAG_DROP",
-                                    f"Released at: ({int(clocX)}, {int(clocY)})",
+                                    "DRAG_DROP_PREMATURE",
+                                    f"Pos: ({int(clocX)}, {int(clocY)})",
                                 )
                         else:
                             drag_change_frames = 0
 
+                        # =====================================================================
+                        # 3. بقية الإيماءات التشغيلية
+                        # =====================================================================
                         if prediction == "Move":
                             self._right_clicked = False
+
                             x3 = np.interp(
                                 x1,
                                 (self.FRAME_LEFT, self.cam_width - self.FRAME_RIGHT),
@@ -318,90 +371,146 @@ class VirtualMouseController:
                                 (self.FRAME_TOP, self.cam_height - self.FRAME_BOTTOM),
                                 (0, hScr),
                             )
-                            clocX = plocX + (x3 - plocX) / self._smoothening
-                            clocY = plocY + (y3 - plocY) / self._smoothening
+
+                            if ENABLE_SMOOTHING:
+                                clocX = plocX + (x3 - plocX) / self._smoothening
+                                clocY = plocY + (y3 - plocY) / self._smoothening
+                            else:
+                                clocX, clocY = x3, y3
 
                             mouse.position = (int(clocX), int(clocY))
                             cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
                             plocX, plocY = clocX, clocY
 
-                        elif prediction == "Left_Click":
-                            self._right_clicked = False
-                            cv2.circle(img, (x1, y1), 15, (0, 255, 0), cv2.FILLED)
-                            mouse.position = (int(plocX), int(plocY))
+                        # حماية: تنفيذ النقرات والتمرير فقط إذا لم يكن زر السحب مضغوطاً
+                        elif not dragging:
+                            if prediction == "Left_Click":
+                                self._right_clicked = False
+                                cv2.circle(img, (x1, y1), 15, (0, 255, 0), cv2.FILLED)
 
-                            time_diff = now - self._last_left_click_time
+                                if ENABLE_COORD_FREEZE:
+                                    mouse.position = (int(plocX), int(plocY))
+                                else:
+                                    x3 = np.interp(x1, (self.FRAME_LEFT, self.cam_width - self.FRAME_RIGHT), (0, wScr))
+                                    y3 = np.interp(y1, (self.FRAME_TOP, self.cam_height - self.FRAME_BOTTOM), (0, hScr))
+                                    mouse.position = (int(x3), int(y3))
 
-                            if time_diff >= self._click_interval:
-                                mouse.click(Button.left, 1)
-                                self._last_left_click_time = now
-                                self.log_event(
-                                    "LEFT_CLICK",
-                                    f"Pos: ({int(plocX)}, {int(plocY)}) | Debounce: {self._click_interval:.2f}s",
-                                )
-                            else:
-                                # تسجيل الحدث المستبعد بسبب مؤقت الـ Debounce
-                                remaining = self._click_interval - time_diff
-                                self.log_event(
-                                    "SUPPRESSED",
-                                    f"LEFT_CLICK cooldown | Held: {remaining:.3f}s remaining",
-                                )
+                                time_diff = now - self._last_left_click_time
 
-                        elif prediction == "Right_Click":
-                            cv2.circle(img, (x1, y1), 15, (0, 0, 255), cv2.FILLED)
-                            mouse.position = (int(plocX), int(plocY))
-
-                            if not self._right_clicked:
-                                mouse.click(Button.right, 1)
-                                self._right_clicked = True
-                                self.log_event(
-                                    "RIGHT_CLICK",
-                                    f"Pos: ({int(plocX)}, {int(plocY)}) | Latched",
-                                )
-
-                        elif prediction == "Scroll":
-                            self._right_clicked = False
-                            cv2.circle(img, (x1, y1), 15, (255, 255, 0), cv2.FILLED)
-                            centerY = self.cam_height / 2
-
-                            delay_frames = max(0, 6 - self._scroll_speed)
-                            steps = max(1, self._scroll_speed - 5)
-
-                            if scroll_delay == 0:
-                                if y1 < (centerY - self._deadzone):
-                                    mouse.scroll(0, steps)
-                                    scroll_delay = delay_frames
-                                    cv2.putText(
-                                        img,
-                                        "Scroll UP",
-                                        (50, 100),
-                                        cv2.FONT_HERSHEY_SIMPLEX,
-                                        1,
-                                        (255, 255, 0),
-                                        2,
-                                    )
+                                if ENABLE_TIME_DEBOUNCE:
+                                    if time_diff >= self._click_interval:
+                                        mouse.click(Button.left, 1)
+                                        self._last_left_click_time = now
+                                        current_pos = mouse.position
+                                        self.log_event(
+                                            "LEFT_CLICK",
+                                            f"Pos: ({int(current_pos[0])}, {int(current_pos[1])}) | Debounce: {self._click_interval:.2f}s",
+                                        )
+                                    else:
+                                        remaining = self._click_interval - time_diff
+                                        self.log_event(
+                                            "SUPPRESSED",
+                                            f"LEFT_CLICK cooldown | Held: {remaining:.3f}s remaining",
+                                        )
+                                else:
+                                    mouse.click(Button.left)
+                                    current_pos = mouse.position
                                     self.log_event(
-                                        "SCROLL_UP",
-                                        f"Steps: {steps} | ΔY: {int(centerY - y1)}",
+                                        "LEFT_CLICK_CASCADE",
+                                        f"Pos: ({int(current_pos[0])}, {int(current_pos[1])})",
                                     )
-                                elif y1 > (centerY + self._deadzone):
-                                    mouse.scroll(0, -steps)
-                                    scroll_delay = delay_frames
-                                    cv2.putText(
-                                        img,
-                                        "Scroll DOWN",
-                                        (50, 150),
-                                        cv2.FONT_HERSHEY_SIMPLEX,
-                                        1,
-                                        (255, 255, 0),
-                                        2,
-                                    )
+
+                            elif prediction == "Right_Click":
+                                cv2.circle(img, (x1, y1), 15, (0, 0, 255), cv2.FILLED)
+
+                                if ENABLE_COORD_FREEZE:
+                                    mouse.position = (int(plocX), int(plocY))
+                                else:
+                                    x3 = np.interp(x1, (self.FRAME_LEFT, self.cam_width - self.FRAME_RIGHT), (0, wScr))
+                                    y3 = np.interp(y1, (self.FRAME_TOP, self.cam_height - self.FRAME_BOTTOM), (0, hScr))
+                                    mouse.position = (int(x3), int(y3))
+
+                                current_pos = mouse.position
+
+                                if ENABLE_MENU_LATCH:
+                                    if not self._right_clicked:
+                                        mouse.click(Button.right, 1)
+                                        self._right_clicked = True
+                                        self.log_event(
+                                            "RIGHT_CLICK",
+                                            f"Pos: ({int(current_pos[0])}, {int(current_pos[1])}) | Latched",
+                                        )
+                                    else:
+                                        self.log_event(
+                                            "SUPPRESSED",
+                                            f"RIGHT_CLICK held | Context menu retained at ({int(current_pos[0])}, {int(current_pos[1])})",
+                                        )
+                                else:
+                                    mouse.click(Button.right, 1)
                                     self.log_event(
-                                        "SCROLL_DOWN",
-                                        f"Steps: {steps} | ΔY: {int(y1 - centerY)}",
+                                        "RIGHT_CLICK_REDUNDANT",
+                                        f"Pos: ({int(current_pos[0])}, {int(current_pos[1])})",
                                     )
-                            if scroll_delay > 0:
-                                scroll_delay -= 1
+
+                            elif prediction == "Scroll":
+                                self._right_clicked = False
+                                cv2.circle(img, (x1, y1), 15, (255, 255, 0), cv2.FILLED)
+                                centerY = self.cam_height / 2
+
+                                delay_frames = max(0, 6 - self._scroll_speed)
+                                steps = max(1, self._scroll_speed - 5)
+
+                                delta_y = centerY - y1
+                                abs_delta = abs(delta_y)
+
+                                if self._scroll_delay == 0:
+                                    is_outside_deadzone = (
+                                        abs_delta > self._deadzone
+                                        if ENABLE_SCROLL_DEADZONE
+                                        else True
+                                    )
+
+                                    if is_outside_deadzone:
+                                        if delta_y > 0:
+                                            mouse.scroll(0, steps)
+                                            self._scroll_delay = delay_frames
+                                            cv2.putText(
+                                                img,
+                                                "Scroll UP",
+                                                (50, 100),
+                                                cv2.FONT_HERSHEY_SIMPLEX,
+                                                1,
+                                                (255, 255, 0),
+                                                2,
+                                            )
+                                            self.log_event(
+                                                "SCROLL_UP",
+                                                f"Steps: {steps} | ΔY: {int(delta_y)}",
+                                            )
+                                        elif delta_y < 0:
+                                            mouse.scroll(0, -steps)
+                                            self._scroll_delay = delay_frames
+                                            cv2.putText(
+                                                img,
+                                                "Scroll DOWN",
+                                                (50, 150),
+                                                cv2.FONT_HERSHEY_SIMPLEX,
+                                                1,
+                                                (255, 255, 0),
+                                                2,
+                                            )
+                                            self.log_event(
+                                                "SCROLL_DOWN",
+                                                f"Steps: {steps} | ΔY: {int(-delta_y)}",
+                                            )
+                                    else:
+                                        self.log_event(
+                                            "SUPPRESSED",
+                                            f"SCROLL within deadzone | ΔY: {int(delta_y)} (Threshold: {self._deadzone})",
+                                        )
+
+                                if self._scroll_delay > 0:
+                                    self._scroll_delay -= 1
 
                     cv2.putText(
                         img,
