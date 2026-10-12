@@ -1,0 +1,64 @@
+=== AI Virtual Mouse Audit Trace ===
+Exported at: 2026-10-12 23:08:07
+========================================
+
+[23:07:21.020] LEFT_CLICK             | Pos: (779, 310) | Debounce: 0.25s
+[23:07:21.049] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.209s remaining
+[23:07:21.076] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.181s remaining
+[23:07:21.118] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.139s remaining
+[23:07:21.140] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.118s remaining
+[23:07:21.168] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.090s remaining
+[23:07:21.206] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.051s remaining
+[23:07:21.232] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.026s remaining
+[23:07:21.304] LEFT_CLICK             | Pos: (779, 310) | Debounce: 0.25s
+[23:07:21.323] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.208s remaining
+[23:07:21.344] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.187s remaining
+[23:07:21.380] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.151s remaining
+[23:07:21.414] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.117s remaining
+[23:07:21.445] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.087s remaining
+[23:07:21.491] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.040s remaining
+[23:07:21.554] LEFT_CLICK             | Pos: (779, 310) | Debounce: 0.25s
+[23:07:21.581] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.201s remaining
+[23:07:21.601] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.181s remaining
+[23:07:21.617] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.165s remaining
+[23:07:21.646] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.136s remaining
+[23:07:21.689] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.092s remaining
+[23:07:22.616] RIGHT_CLICK            | Pos: (824, 391) | Latched
+[23:07:22.649] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (824, 391)
+[23:07:22.675] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (824, 391)
+[23:07:22.712] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (824, 391)
+[23:07:22.745] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (824, 391)
+[23:07:22.771] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (824, 391)
+[23:07:22.801] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (824, 391)
+[23:07:22.836] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (824, 391)
+[23:07:22.868] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (824, 391)
+[23:07:22.904] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (824, 391)
+[23:07:22.933] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (824, 391)
+[23:07:22.982] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (824, 391)
+[23:07:23.039] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (824, 391)
+[23:07:23.073] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (824, 391)
+[23:07:23.099] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (824, 391)
+[23:07:23.115] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (824, 391)
+[23:07:23.144] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (824, 391)
+[23:07:23.195] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (824, 391)
+[23:07:24.201] LEFT_CLICK             | Pos: (779, 461) | Debounce: 0.25s
+[23:07:24.223] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.209s remaining
+[23:07:26.297] DRAG_START             | Anchor: (857, 178)
+[23:07:26.696] DRAG_START             | Anchor: (683, 431)
+[23:07:27.864] DRAG_START             | Anchor: (226, 699)
+[23:07:27.949] DRAG_START             | Anchor: (393, 620)
+[23:07:29.562] DRAG_START             | Anchor: (784, 350)
+[23:07:32.690] DRAG_DROP_PREMATURE    | Pos: (704, 366)
+[23:07:37.511] DRAG_START             | Anchor: (755, 342)
+[23:07:39.846] DRAG_DROP_PREMATURE    | Pos: (352, 188)
+[23:07:41.843] DRAG_START             | Anchor: (926, 91)
+[23:07:43.364] DRAG_DROP_PREMATURE    | Pos: (5, 945)
+[23:07:43.642] DRAG_START             | Anchor: (1, 836)
+[23:07:43.662] DRAG_DROP_PREMATURE    | Pos: (1, 836)
+[23:07:43.743] DRAG_START             | Anchor: (1, 808)
+[23:07:43.766] DRAG_DROP_PREMATURE    | Pos: (1, 808)
+[23:07:48.425] DRAG_START             | Anchor: (779, 531)
+[23:07:50.725] DRAG_START             | Anchor: (300, 197)
+[23:07:53.511] DRAG_DROP_PREMATURE    | Pos: (527, 453)
+[23:07:55.357] DRAG_START             | Anchor: (514, 445)
+[23:07:58.144] DRAG_DROP_PREMATURE    | Pos: (38, 57)

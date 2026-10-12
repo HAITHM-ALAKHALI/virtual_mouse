@@ -1,0 +1,61 @@
+=== AI Virtual Mouse Audit Trace ===
+Exported at: 2026-10-12 22:58:30
+========================================
+
+[22:58:09.774] LEFT_CLICK             | Pos: (754, 439) | Debounce: 0.25s
+[22:58:09.840] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.175s remaining
+[22:58:09.917] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.097s remaining
+[22:58:09.971] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.043s remaining
+[22:58:10.007] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.008s remaining
+[22:58:10.107] LEFT_CLICK             | Pos: (746, 462) | Debounce: 0.25s
+[22:58:10.152] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.193s remaining
+[22:58:10.201] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.144s remaining
+[22:58:10.266] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.079s remaining
+[22:58:10.316] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.029s remaining
+[22:58:10.387] LEFT_CLICK             | Pos: (759, 459) | Debounce: 0.25s
+[22:58:10.437] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.191s remaining
+[22:58:10.488] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.141s remaining
+[22:58:10.556] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.073s remaining
+[22:58:10.657] LEFT_CLICK             | Pos: (768, 466) | Debounce: 0.25s
+[22:58:10.700] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.183s remaining
+[22:58:18.085] RIGHT_CLICK            | Pos: (637, 513) | Latched
+[22:58:18.135] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (628, 520)
+[22:58:18.207] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (628, 524)
+[22:58:18.246] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (637, 524)
+[22:58:18.314] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (641, 520)
+[22:58:18.377] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (650, 520)
+[22:58:18.454] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (650, 516)
+[22:58:18.513] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (650, 516)
+[22:58:18.549] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (654, 520)
+[22:58:18.634] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (650, 520)
+[22:58:18.681] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (658, 520)
+[22:58:18.726] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (654, 520)
+[22:58:18.790] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (658, 520)
+[22:58:18.859] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (658, 520)
+[22:58:18.921] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (654, 516)
+[22:58:19.019] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (654, 520)
+[22:58:19.056] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (654, 513)
+[22:58:19.097] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (658, 524)
+[22:58:19.177] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (658, 513)
+[22:58:19.243] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (654, 516)
+[22:58:19.279] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (663, 520)
+[22:58:19.335] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (658, 520)
+[22:58:19.412] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (663, 520)
+[22:58:19.464] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (658, 520)
+[22:58:19.520] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (663, 524)
+[22:58:19.590] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (663, 524)
+[22:58:19.648] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (663, 524)
+[22:58:19.706] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (663, 520)
+[22:58:19.783] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (658, 524)
+[22:58:19.835] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (658, 520)
+[22:58:19.878] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (658, 520)
+[22:58:19.960] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (658, 520)
+[22:58:20.006] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (658, 520)
+[22:58:20.058] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (658, 524)
+[22:58:20.128] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (663, 528)
+[22:58:20.191] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (654, 524)
+[22:58:20.237] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (658, 528)
+[22:58:20.296] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (663, 524)
+[22:58:20.368] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (663, 524)
+[22:58:20.434] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (667, 520)
+[22:58:20.469] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (689, 497)
