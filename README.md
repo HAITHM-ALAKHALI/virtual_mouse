@@ -6,59 +6,110 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white" alt="Python">
-  <img src="https://img.shields.io/badge/License-MIT-green" alt="License: MIT">
-  <img src="https://img.shields.io/badge/MediaPipe-Tasks_API-00A98F?logo=google&logoColor=white" alt="MediaPipe">
-  <img src="https://img.shields.io/badge/scikit--learn-1.3+-F7931E?logo=scikit-learn&logoColor=white" alt="scikit-learn">
-  <img src="https://img.shields.io/badge/Dataset-Kaggle_v1.0.0-20BEFF?logo=kaggle&logoColor=white" alt="Kaggle">
-  <img src="https://img.shields.io/badge/Paper-arXiv-B31B1B?logo=arxiv&logoColor=white" alt="arXiv">
+  <img src="[https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)" alt="Python">
+  <img src="[https://img.shields.io/badge/License-MIT-green](https://img.shields.io/badge/License-MIT-green)" alt="License: MIT">
+  <img src="[https://img.shields.io/badge/MediaPipe-Tasks_API-00A98F?logo=google&logoColor=white](https://img.shields.io/badge/MediaPipe-Tasks_API-00A98F?logo=google&logoColor=white)" alt="MediaPipe">
+  <img src="[https://img.shields.io/badge/scikit--learn-1.3+-F7931E?logo=scikit-learn&logoColor=white](https://img.shields.io/badge/scikit--learn-1.3+-F7931E?logo=scikit-learn&logoColor=white)" alt="scikit-learn">
+  <img src="[https://img.shields.io/badge/Dataset-Kaggle_v1.0.0-20BEFF?logo=kaggle&logoColor=white](https://img.shields.io/badge/Dataset-Kaggle_v1.0.0-20BEFF?logo=kaggle&logoColor=white)" alt="Kaggle">
+  <img src="[https://img.shields.io/badge/Paper-IEEE_Format-00629B?logo=ieee&logoColor=white](https://img.shields.io/badge/Paper-IEEE_Format-00629B?logo=ieee&logoColor=white)" alt="IEEE Paper">
 </p>
 
 ---
 
 ## Abstract
 
-This repository contains the reference implementation for the paper:
+This repository contains the official reference implementation, benchmark scripts, and empirical telemetry logs for the paper:
 
-> **A Hybrid Architecture for Vision-Based Virtual Mouse Systems: Normalized Gesture Classification and Deterministic OS Event Dispatching**
-> *Haithm Abdulwali Al-Akhali — Department of Computer Science, Sana'a University*
+> **A Hybrid Architecture for Vision-Based Virtual Mouse Systems: Normalized Gesture Classification and Deterministic OS Event Dispatching**  
+> *Haithm Abdulwali Al-Akhali — Department of Computer Science, Faculty of Computer Science and Information Technology, Sana'a University*
 
-The system presents an empirically evaluated hybrid architecture for real-time virtual mouse control that bridges probabilistic computer vision inference with deterministic operating system event dispatching. The pipeline decouples spatial landmark kinematics from intentional state recognition: 21 hand landmarks are extracted via MediaPipe Tasks (`RunningMode.VIDEO`), from which 2D image-plane components are retained and normalised into a **42-dimensional feature vector** — translation-normalised to the wrist origin, scale-normalised against the wrist-to-middle-MCP distance, and canonicalised across handedness via horizontal reflection.
+Vision-based human-computer interaction (HCI) interfaces frequently suffer from operational non-determinism, including high-frequency cursor jitter, unintentional multi-click cascades, and unintended context-menu dismissals caused by hardware-dependent frame rate (FPS) variations and involuntary physiological hand tremors. This project presents an empirically evaluated hybrid architecture for real-time virtual mouse control that bridges probabilistic computer vision inference with deterministic operating system (OS) event-dispatching behavior.
 
-An **RBF-kernel SVM pipeline** (C=10.0, StandardScaler, 1,139 support vectors) trained on **10,008 multi-subject instances** across six gesture classes achieves **98.10% test accuracy** with **0.717 ms** isolated inference latency. Downstream, a **deterministic action dispatcher** enforces time-gated debouncing (0.25 s), coordinate freezing during click actuation, a latched context-menu state machine, and multi-frame drag hysteresis — all decoupled from frame rate. A **thread-safe circular telemetry buffer** (`deque(maxlen=20)`) provides millisecond-resolution audit tracing without blocking the vision processing loop.
+The pipeline decouples spatial landmark kinematics from intentional state recognition: 21 three-dimensional hand landmarks are extracted via MediaPipe Tasks (`RunningMode.VIDEO`), stabilized using a temporal wrist-anchoring state machine to prevent multi-user target switching. Retained 2D image-plane components undergo translation normalization to the wrist origin, approximate uniform-scale normalization against the wrist-to-middle-MCP distance, and handedness canonicalization via horizontal reflection into a unified **42-dimensional feature vector**.
+
+Evaluated on a curated dataset of **10,008 empirical instances** across five human subjects and six operational classes (`Move`, `Left_Click`, `Right_Click`, `Drag`, `Scroll`, and `Neutral`), an **RBF-kernel Support Vector Machine (SVM)** pipeline achieves **98.10% sample-level test accuracy** under a stratified random split with an isolated inference latency of **0.717 ms** (averaging **0.72 ms** under steady-state daemon execution) and rapid model training time (**0.68 s**). Crucially, zero-shot evaluation of the frozen classifier on an external held-out cohort of **766 newly captured samples** across three unseen human subjects demonstrates **88.12% cross-subject accuracy** (macro F1-score: **0.88**) without subject-specific retraining. Downstream, an FPS-decoupled, wall-clock debouncing mechanism (0.25 s) combined with coordinate freezing, an event-latched state machine, and two-frame drag hysteresis eliminates multi-click cascades, stabilizes context menus, and reduces logged actuation displacement from **99.92 px down to 0.00 px** across exploratory live ablation trials, with an average post-detection pipeline overhead of approximately **1.22 ms**.
 
 ---
 
 ## Key Architectural Features
 
-- **42D Anatomical Normalisation Pipeline**
-  - Translation normalisation: wrist landmark (p₀) as coordinate origin
-  - Scale normalisation: Euclidean distance from wrist to middle-MCP joint (p₉ − p₀) as the scale divisor
-  - Handedness canonicalisation: horizontal reflection (x ← −x) for left-hand inputs
+- **Temporal Target-Hand Anchoring (`HandTrackingModule.py`)**
+  - Wrist-based hand identity tracking with Euclidean distance threshold `D_max = 0.25` in normalized image space.
+  - Tracking-loss hysteresis counter retaining anchor parameters for up to `M_lost = 20` consecutive frames to prevent disruptive target switching.
 
-- **Deterministic Action Dispatcher**
-  - FPS-decoupled click debouncing: `T_interval = max(0.05, clickDelay × 0.025) s` (default 0.25 s), evaluated via `time.time()`
-  - Coordinate freezing: OS pointer held at `(plocX, plocY)` during click actuation to prevent drag-slip
-  - Context-menu latch (`_right_clicked`): suppresses redundant right-click dispatches; resets only on gesture transition or hand loss
-  - Drag hysteresis: 2-frame persistence window (`drag_change_frames >= 2`) before releasing `Button.left`
+- **Bifurcated 42D Anatomical Normalization Pipeline**
+  - **Continuous Kinematic Stream:** Maps raw index fingertip `p_8 = (x_8, y_8)` to display resolution `(w_scr, h_scr)` with exponential smoothing divisor `alpha` in `[1, 15]`.
+  - **Normalized Classification Stream:**
+    1. *Translation Normalization:* Wrist landmark (`p_0`) set as the coordinate origin (`q_i = p_i - p_0`).
+    2. *Anatomical Scale Normalization:* Scaled by characteristic palm length `s = ||p_9 - p_0||_2` with an explicit division-by-zero safeguard.
+    3. *Handedness Canonicalization:* Horizontal reflection (`x_i <- -x_i` if `Handedness == Left`) to unify left and right hands into a single feature space.
 
-- **Temporal Anchor Tracking**
-  - Wrist-based hand identity tracking with D_max = 0.25 (normalised image coordinates)
-  - Lost-frame hysteresis retaining anchor for up to M_lost = 20 consecutive frames
+- **Deterministic Action Dispatcher (`Main.py`)**
+  - **FPS-Decoupled Wall-Clock Debouncing:** Enforces `Delta_t = t_now - t_last_click >= T_interval` (`0.25 s` default) via `time.time()`.
+  - **Actuation Coordinate Freezing:** Locks OS pointer at pre-actuation anchor `(plocX, plocY)` during `Left_Click` and `Right_Click` actuation to eliminate finger-flexion slip.
+  - **Latched Context-Menu State Machine (`L_R`):** Dispatches a single right-click event and latches state, suppressing redundant frame triggers until explicit gesture transition or hand loss.
+  - **Two-Frame Drag Hysteresis (`Delta_f >= 2`):** Requires two consecutive non-drag frames before releasing `Button.left`, absorbing transient single-frame classification flickers.
+  - **Scroll Deadzone Engine:** Evaluates vertical displacement relative to a configurable center deadzone (`|y_8 - Y_center| > deadzone`) with dynamic velocity scaling.
 
-- **Dual-Thread Asynchronous Telemetry**
-  - Vision + dispatch loop in an isolated daemon thread
-  - Mutex-protected circular buffer (`_log_lock` + `deque(maxlen=20)`)
-  - Millisecond-resolution audit traces: `[HH:MM:SS.mmm] ACTION | Pos: (X, Y) | Metadata`
+- **Dual-Thread Asynchronous Telemetry & Full Session Auditing**
+  - Vision acquisition, inference, and OS dispatching execute in an isolated daemon thread decoupled from the `CustomTkinter` GUI main loop.
+  - Protected by synchronization mutexes (`_frame_lock` and `_log_lock`) with a live circular preview buffer (`deque(maxlen=20)`) and full-session export buffers logging both dispatched actions and `SUPPRESSED` cooldown candidates at millisecond resolution.
+
+---
+
+## Experimental Benchmarks & Results
+
+### 1. Classifier Pipeline Comparison (2,002 Test Instances — Stratified 80/20 Split)
+
+| Classifier Architecture | Accuracy (%) | Macro Precision | Macro Recall | Macro F1-Score | Isolated Latency (ms) | Training Time (s) |
+|:------------------------|:------------:|:---------------:|:------------:|:--------------:|:---------------------:|:-----------------:|
+| Random Forest (100 Estimators) | 97.35% | 0.97 | 0.97 | 0.97 | 9.117 | 4.43 |
+| **SVM (RBF Kernel, C=10.0)** | **98.10%** | **0.98** | **0.98** | **0.98** | **0.717** | **0.68** |
+| Neural Network (MLP, 64x32) | 98.20% | 0.98 | 0.98 | 0.98 | 0.591 | 14.66 |
+
+### 2. Zero-Shot Cross-Subject Generalization (Unseen External Cohort)
+
+Evaluated directly using the frozen `virtual_mouse_brain.pkl` model without any subject-specific fine-tuning or calibration:
+
+| Evaluation Cohort | Subjects | Sample Count | Accuracy (%) | Macro F1-Score |
+|:------------------|:--------:|:------------:|:------------:|:--------------:|
+| Internal Test Split | 5 (Shared) | 2,002 | 98.10% | 0.98 |
+| Subject 1 (External) | 1 (Unseen) | 292 | 81.51% | — |
+| Subject 2 (External) | 1 (Unseen) | 212 | 100.00% | — |
+| Subject 3 (External) | 1 (Unseen) | 262 | 85.88% | — |
+| **Combined Held-Out Cohort** | **3 (Unseen)** | **766** | **88.12%** | **0.88** |
+
+### 3. Exploratory Live Ablation Study of Action Dispatcher Mechanisms
+
+Conducted across 6 live interactive camera sessions isolating each software control in `Main.py` and auditing internal telemetry traces:
+
+| Configuration Pipeline | Audit Log File | Max Cursor Drift (px) | Click Cascades (count) | Redundant Menu (count) | Premature Drops (%) |
+|:-----------------------|:---------------|:---------------------:|:----------------------:|:----------------------:|:-------------------:|
+| *Naive Baseline (All Off)* | `audit_baseline_2.txt` | 99.92 | 59 | 48 | 100.0% (1/1) |
+| w/o Actuation Coord Freeze | `audit_wo_freeze.txt` | 54.41 | 0 | 0 | 0.0% |
+| w/o Wall-Clock Debounce (Delta_t) | `audit_wo_debounce.txt` | **0.00** | 71 | 0 | 0.0% |
+| w/o Latched Menu FSM (L_R) | `audit_wo_latch.txt` | **0.00** | 0 | 60 | 0.0% |
+| w/o Drag Hysteresis (Delta_f >= 2) | `audit_wo_drag.txt` | **0.00** | 0 | 0 | 100.0% (7/7) |
+| **Full Proposed Pipeline** | `audit_proposed.txt` | **0.00** | **0** | **0** | **0.0% (0/1)** |
+
+### 4. End-to-End Runtime Latency Profile (500 Operational Cycles)
+
+| Pipeline Stage | Mean Latency ± Std (ms) | Notes |
+|:---------------|:-----------------------:|:------|
+| 1. Video Acquisition & MediaPipe Inference | 33.53 ± 38.54 ms | 95th percentile: 62.93 ms |
+| 2. 42D Anatomical Normalization | 0.06 ± 0.01 ms | Translation, scale, handedness reflection |
+| 3. SVM-RBF Classification | 0.72 ± 0.14 ms | 0.717 ms isolated micro-benchmark |
+| 4. Action Dispatcher & OS Event Injection | 0.44 ± 0.08 ms | Includes mutex telemetry logging + `pynput` |
+| **Total Post-Detection Overhead (Stages 2–4)** | **~1.22 ms** | **< 4% of nominal 30 FPS frame budget** |
 
 ---
 
 ## Repository Structure
 
-```
+~~~text
 ├── Agent_Execution/
-│   ├── App_GUI.py                  # Dark-themed control panel (CustomTkinter)
-│   └── Main.py                     # VirtualMouseController — daemon thread pipeline
+│   ├── App_GUI.py                  # Dark-themed control panel & full-session log exporter (CustomTkinter)
+│   └── Main.py                     # VirtualMouseController — daemon thread pipeline & ablation flags
 │
 ├── Data_Engineering/
 │   ├── Dataset/
@@ -67,20 +118,21 @@ An **RBF-kernel SVM pipeline** (C=10.0, StandardScaler, 1,139 support vectors) t
 │   └── data_cleaning.ipynb         # Exploratory analysis and preprocessing
 │
 ├── Model_Training/
-│   ├── Train_Model.ipynb           # Classifier benchmarking (RF, SVM-RBF, MLP)
-│   └── virtual_mouse_brain.pkl     # Deployed SVM pipeline (StandardScaler + SVC)
+│   ├── Train_Model.ipynb           # Classifier benchmarking (RF, SVM-RBF, MLP) & held-out evaluation
+│   └── virtual_mouse_brain.pkl     # Deployed SVM pipeline (StandardScaler + SVC, 1,139 SVs)
 │
 ├── Test/
-│   └── benchmark_latency.py        # Per-stage pipeline latency profiler (500 frames)
+│   ├── benchmark_latency.py        # Per-stage pipeline latency profiler (500 frames)
+│   └── audit_logs/                 # Empirical telemetry traces (mouse_audit.txt, ablation & subject logs)
 │
 ├── Utils/
-│   ├── HandTrackingModule.py       # MediaPipe HandLandmarker wrapper + anchor tracker
+│   ├── HandTrackingModule.py       # MediaPipe HandLandmarker wrapper + temporal wrist anchor tracker
 │   └── hand_landmarker.task        # MediaPipe model asset
 │
 ├── requirements.txt
 ├── .gitignore
 └── README.md
-```
+~~~
 
 ---
 
@@ -90,25 +142,25 @@ An **RBF-kernel SVM pipeline** (C=10.0, StandardScaler, 1,139 support vectors) t
 
 | Requirement | Version |
 |:------------|:--------|
-| Python | 3.10+ |
-| OS | Windows 10/11 (primary), macOS / Linux (experimental) |
-| Hardware | Webcam, 4+ CPU cores recommended |
+| Python | 3.10+ (Tested on Python 3.13.5) |
+| OS | Windows 10/11 (primary testbed: Windows 11 Build 26200), macOS / Linux |
+| Hardware | Monocular USB Webcam, 4+ CPU cores recommended |
 
 ### Setup
 
-```bash
+~~~bash
 # 1. Clone the repository
-git clone https://github.com/HAITHM-ALAKHALI/virtual_mouse.git
+git clone [https://github.com/HAITHM-ALAKHALI/virtual_mouse.git](https://github.com/HAITHM-ALAKHALI/virtual_mouse.git)
 cd virtual_mouse
 
-# 2. Create a virtual environment (recommended)
+# 2. Create and activate a virtual environment (recommended)
 python -m venv venv
 venv\Scripts\activate            # Windows
 # source venv/bin/activate       # macOS / Linux
 
 # 3. Install dependencies
 pip install -r requirements.txt
-```
+~~~
 
 ### Dependencies
 
@@ -116,76 +168,68 @@ pip install -r requirements.txt
 |:--------|:--------|
 | `mediapipe` | Hand landmark detection (Tasks API, `RunningMode.VIDEO`) |
 | `opencv-python` | Camera capture and image processing |
-| `scikit-learn` | SVM classifier pipeline (StandardScaler + SVC) |
+| `scikit-learn` | SVM classifier pipeline (`StandardScaler` + `SVC`) |
 | `pynput` | OS-level mouse event injection (`Controller`, `Button`) |
 | `customtkinter` | Modern dark-themed GUI framework |
-| `Pillow` | BGR → RGB image conversion for GUI preview |
-| `numpy` | Array operations and interpolation |
-| `joblib` | Model serialisation (benchmark script) |
+| `Pillow` | BGR to RGB image conversion for GUI preview |
+| `numpy` | Vectorized array operations and linear interpolation |
+| `joblib` | Model serialization and loading |
 
 ---
 
-## Quick Start
+## Quick Start & Reproducing Experiments
 
 ### 1. Run the Live Application
 
-```bash
+~~~bash
 cd Agent_Execution
 python App_GUI.py
-```
+~~~
 
-The GUI launches → click **▶ Start Virtual Mouse** → show your hand to the camera.
+Click **▶ Start Virtual Mouse** in the GUI and position your hand in front of the webcam.
 
-### 2. Collect Custom Training Data
+### 2. Reproduce Ablation Study Configurations
 
-```bash
+Inside `Agent_Execution/Main.py`, toggle the boolean ablation flags inside `VirtualMouseController.__init__()` to isolate individual dispatcher subsystems:
+
+~~~python
+self.ENABLE_COORD_FREEZE = True      # Lock (plocX, plocY) during click actuation
+self.ENABLE_TIME_DEBOUNCE = True     # Wall-clock 0.25s left-click refractory gate
+self.ENABLE_MENU_LATCH = True        # State-latched context-menu retention (L_R)
+self.ENABLE_DRAG_HYSTERESIS = True   # 2-frame persistence filter before drag drop
+self.ENABLE_SCROLL_DEADZONE = True   # Vertical center deadband for scroll gestures
+self.ENABLE_SMOOTHING = True         # Exponential cursor smoothing divisor
+~~~
+
+Click **📥 Export Log** in the GUI after any session to export the complete, untruncated millisecond-stamped trace:
+
+~~~text
+[22:50:19.160] LEFT_CLICK             | Pos: (813, 332) | Debounce: 0.25s
+[22:50:19.228] SUPPRESSED             | LEFT_CLICK cooldown | Held: 0.168s remaining
+[22:50:22.495] RIGHT_CLICK            | Pos: (823, 405) | Latched
+[22:50:22.523] SUPPRESSED             | RIGHT_CLICK held | Context menu retained at (823, 405)
+[22:50:32.390] DRAG_START             | Anchor: (812, 323)
+[22:50:35.915] DRAG_DROP              | Released at: (563, 449)
+[22:50:37.550] SCROLL_UP              | Steps: 1 | ΔY: 162
+~~~
+
+### 3. Collect Custom Training Data
+
+~~~bash
 cd Data_Engineering/Dataset
 python Collect_Data.py
-```
+~~~
 
-Hold a gesture and press the corresponding key to label frames:
-
-| Key | Gesture |
-|:---:|:--------|
-| `m` | Move |
-| `l` | Left_Click |
-| `r` | Right_Click |
-| `s` | Scroll |
-| `d` | Drag |
-| `n` | Neutral |
-| `q` | Quit |
-
-Labelled 42D feature vectors are appended to `virtual_mouse_data.csv`.
-
-### 3. Train and Evaluate the ML Pipeline
-
-Open and run `Model_Training/Train_Model.ipynb`. The notebook:
-1. Loads `virtual_mouse_data.csv` (10,008 instances, 6 classes)
-2. Applies an 80/20 stratified split (`test_size=0.20`, `random_state=42`, `stratify=y`)
-3. Benchmarks Random Forest, SVM-RBF, and MLP pipelines
-4. Exports the selected model to `virtual_mouse_brain.pkl`
+Hold a gesture and press the corresponding key (`m`: Move, `l`: Left_Click, `r`: Right_Click, `s`: Scroll, `d`: Drag, `n`: Neutral, `q`: Quit) to append labeled 42D feature vectors to `virtual_mouse_data.csv`.
 
 ### 4. Run the Latency Benchmark
 
-```bash
+~~~bash
 cd Test
 python benchmark_latency.py
-```
+~~~
 
-Profiles 500 consecutive frames across 4 stages: MediaPipe detection, 42D normalisation, SVM inference, and action dispatch overhead.
-
-### 5. Inspect Audit Traces
-
-Use the **📥 Export Log** button in the GUI to save the telemetry audit trace. The exported file follows the format:
-
-```
-[HH:MM:SS.mmm] LEFT_CLICK   | Pos: (774, 533) | Debounce: 0.25s
-[HH:MM:SS.mmm] RIGHT_CLICK  | Pos: (803, 726) | Latched
-[HH:MM:SS.mmm] DRAG_START   | Anchor: (791, 753)
-[HH:MM:SS.mmm] DRAG_DROP    | Released at: (493, 241)
-[HH:MM:SS.mmm] SCROLL_UP    | Steps: 1 | ΔY: 85
-[HH:MM:SS.mmm] SCROLL_DOWN  | Steps: 1 | ΔY: 227
-```
+Profiles 500 consecutive operational cycles across MediaPipe inference, 42D normalization, SVM classification, and action dispatch overhead.
 
 ---
 
@@ -194,52 +238,37 @@ Use the **📥 Export Log** button in the GUI to save the telemetry audit trace.
 | Asset | Location | Description |
 |:------|:---------|:------------|
 | Training dataset | [`Data_Engineering/Dataset/virtual_mouse_data.csv`](Data_Engineering/Dataset/virtual_mouse_data.csv) | 10,008 instances × 42 features + label |
-| Kaggle dataset | [kaggle.com/datasets/haithmalakhali/virtual-mouse-landmarks](https://www.kaggle.com/datasets/haithmalakhali/virtual-mouse-landmarks) | Release v1.0.0 |
+| Kaggle dataset | [kaggle.com/datasets/haithmalakhali/virtual-mouse-landmarks](https://www.kaggle.com/datasets/haithmalakhali/virtual-mouse-landmarks) | Public Release v1.0.0 |
 | Trained model | [`Model_Training/virtual_mouse_brain.pkl`](Model_Training/virtual_mouse_brain.pkl) | `Pipeline([StandardScaler, SVC(rbf, C=10.0)])` — 1,139 SVs |
 
-Place `virtual_mouse_brain.pkl` in `Model_Training/` (default location) or alongside `Main.py` in `Agent_Execution/`.
-
 ---
 
-## Gesture Reference
+## Gesture Reference & Runtime Configuration
 
-| Gesture | Hand Pose | OS Action |
-|:--------|:----------|:----------|
-| ☝️ **Move** | Index finger extended | Cursor follows index fingertip |
-| ✌️ **Left Click** | Index + Middle fingers | Time-gated left click (0.25 s debounce) |
-| 🤟 **Right Click** | Index + Middle + Ring | Latched right click (single dispatch) |
-| 🖐️ **Scroll** | Open palm | Vertical scroll based on hand position relative to deadzone |
-| ✊ **Drag** | Closed fist | Press-hold `Button.left`; release after 2-frame hysteresis |
-
----
-
-## Runtime Configuration
-
-All settings are adjustable in real time from the GUI:
-
-| Setting | Range | Default | Description |
-|:--------|:-----:|:-------:|:------------|
-| **Smoothening** (α) | 1 – 15 | 7 | Exponential moving average divisor for cursor position |
-| **Scroll Deadzone** | 20 – 150 px | 60 | Vertical dead band around camera centre; suppresses unintended scrolling |
-| **Scroll Speed** | 1 – 10 | 3 | Controls scroll step size and inter-scroll frame delay |
-| **Click Delay** | 0 – 20 | 10 | Maps to `T_interval = max(0.05, value × 0.025) s` |
+| Gesture | Hand Pose | Deterministic OS Action |
+|:--------|:----------|:------------------------|
+| ☝️ **Move** | Index finger extended | Continuous cursor tracking with smoothing divisor `alpha` |
+| ✌️ **Left Click** | Index + Middle fingers | Coordinate-frozen, time-gated left click (0.25 s debounce) |
+| 🤟 **Right Click** | Index + Middle + Ring | Coordinate-frozen, state-latched right click (single dispatch) |
+| 🖐️ **Scroll** | Open palm | Bidirectional vertical scroll outside center deadzone |
+| ✊ **Drag** | Closed fist | Press-hold `Button.left`; released after 2-frame hysteresis |
+| 🤚 **Neutral** | Relaxed / Transition pose | Suppresses OS event injection and resets non-latched states |
 
 ---
 
 ## Citation
 
-If you use this work in your research, please cite:
+If you use this architecture, code, or dataset in your research, please cite:
 
-```bibtex
-@article{alakhali2026hybrid,
-  title   = {A Hybrid Architecture for Vision-Based Virtual Mouse Systems:
-             Normalized Gesture Classification and Deterministic OS Event
-             Dispatching},
-  author  = {Al-Akhali, Haithm Abdulwali},
-  journal = {arXiv preprint},
-  year    = {2026}
+~~~bibtex
+@inproceedings{alakhali2026hybrid,
+  author    = {Al-Akhali, Haithm Abdulwali},
+  title     = {A Hybrid Architecture for Vision-Based Virtual Mouse Systems: Normalized Gesture Classification and Deterministic OS Event Dispatching},
+  booktitle = {IEEE Conference Proceedings / Preprint},
+  year      = {2026},
+  url       = {https://github.com/HAITHM-ALAKHALI/virtual_mouse}
 }
-```
+~~~
 
 ---
 
@@ -251,8 +280,8 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 
 ## Author
 
-**Haithm Abdulwali Al-Akhali**
-Department of Computer Science, Faculty of Computer Science and Information Technology
-Sana'a University, Sana'a, Yemen
+**Haithm Abdulwali Al-Akhali**  
+Department of Computer Science, Faculty of Computer Science and Information Technology  
+Sana'a University, Sana'a, Yemen  
 
-[🌐 Portfolio](https://haithm-al-akhali.vercel.app/) · [💻 GitHub](https://github.com/HAITHM-ALAKHALI) · [✉️ Email](mailto:haithmabdulwali.alakhali@gmail.com)
+[🌐 Portfolio](https://haithm-al-akhali.vercel.app/) · [💻 GitHub](https://github.com/HAITHM-ALAKHALI) · [📊 Kaggle](https://www.kaggle.com/datasets/haithmalakhali/virtual-mouse-landmarks) · [✉️ Email](mailto:haithmabdulwali.alakhali@gmail.com)
