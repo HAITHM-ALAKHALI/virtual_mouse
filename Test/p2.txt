@@ -18,7 +18,9 @@ Exported at: 2026-09-30 05:36:14
 [05:35:33.649] LEFT_CLICK   | Pos: (1154, 620) | Debounce: 0.25s
 [05:35:33.915] LEFT_CLICK   | Pos: (1154, 620) | Debounce: 0.25s
 [05:35:34.198] DRAG_START   | Anchor: (1216, 686)
+[05:35:51.983] DRAG_DROP    | Released at: (665, 457)
 [05:35:43.263] DRAG_START   | Anchor: (687, 559)
 [05:35:51.983] DRAG_DROP    | Released at: (665, 457)
 [05:35:52.362] SCROLL_UP    | Steps: 1 | ΔY: 61
 [05:35:52.645] DRAG_START   | Anchor: (806, 457)
+[05:35:51.983] DRAG_DROP    | Released at: (765, 557)

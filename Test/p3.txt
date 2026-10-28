@@ -20,5 +20,6 @@ Exported at: 2026-09-30 05:42:20
 [05:41:38.921] SCROLL_UP    | Steps: 1 | ΔY: 88
 [05:41:39.033] SCROLL_UP    | Steps: 1 | ΔY: 65
 [05:41:39.239] DRAG_START   | Anchor: (939, 970)
+[05:41:41.849] DRAG_DROP    | Released at: (1002, 908)
 [05:41:41.788] DRAG_START   | Anchor: (1144, 996)
 [05:41:41.849] DRAG_DROP    | Released at: (1202, 1008)
