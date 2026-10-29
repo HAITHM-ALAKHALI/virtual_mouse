@@ -38,7 +38,7 @@ The proposed pipeline decouples spatial landmark kinematics from intentional sta
   - **Continuous Kinematic Stream:** Maps raw index fingertip $\mathbf{p}_8 = (x_8, y_8)$ to display resolution $(w_{\text{scr}}, h_{\text{scr}})$ with an exponential smoothing divisor $\alpha \in [1, 15]$.
   - **Normalized Classification Stream:**
     1. *Translation Normalization:* Wrist landmark ($\mathbf{p}_0$) defined as the coordinate origin ($\mathbf{q}_i = \mathbf{p}_i - \mathbf{p}_0$).
-    2. *Anatomical Scale Normalization:* Scaled by characteristic palm length $s = \|\mathbf{p}_9 - \mathbf{p}_0\|_2$ with an explicit division-by-zero safeguard.
+    2. *Anatomical Scale Normalization:* Scaled by characteristic palm length $s = \Vert{}\mathbf{p}_9 - \mathbf{p}_0\Vert{}_2$ with an explicit division-by-zero safeguard.
     3. *Handedness Canonicalization:* Horizontal reflection ($\hat{x}_i \leftarrow -\hat{x}_i$ if $\text{Handedness} = \text{Left}$) canonicalizing left-hand geometry into the right-hand convention.
 
 - **Rule-Based Action Dispatcher (`Agent_Execution/Main.py`)**
@@ -111,12 +111,11 @@ Conducted across 6 independent live interactive camera sessions isolating each s
 │   └── Main.py                     # VirtualMouseController — daemon thread pipeline & ablation flags
 │
 ├── Data_Engineering/
-│   ├── Dataset/
-│   │   ├── Collect_Data.py         # Live landmark data collection with key-labelling
-│   │   ├── virtual_mouse_data.csv  # 10,008 labelled development instances (5 subjects)
-│   │   ├── p1.csv                  # Unseen held-out Subject 1 dataset (292 instances)
-│   │   ├── p2.csv                  # Unseen held-out Subject 2 dataset (212 instances)
-│   │   └── p3.csv                  # Unseen held-out Subject 3 dataset (262 instances)
+│   ├── Collect_Data.py             # Live landmark data collection with key-labelling
+│   ├── virtual_mouse_data.csv      # 10,008 labelled development instances (5 subjects)
+│   ├── p1.csv                      # Unseen held-out Subject 1 dataset (292 instances)
+│   ├── p2.csv                      # Unseen held-out Subject 2 dataset (212 instances)
+│   ├── p3.csv                      # Unseen held-out Subject 3 dataset (262 instances)
 │   └── data_cleaning.ipynb         # Exploratory analysis and preprocessing
 │
 ├── Model_Training/
@@ -144,6 +143,8 @@ Conducted across 6 independent live interactive camera sessions isolating each s
 │   └── hand_landmarker.task        # MediaPipe model asset
 │
 ├── .gitignore
+├── CITATION.cff                    # Citation metadata for academic indexing
+├── LICENSE                         # MIT License file
 ├── mouse_audit.txt                 # Default runtime export trace
 ├── README.md
 └── requirements.txt
@@ -223,7 +224,7 @@ Click **📥 Export Log** in the GUI after any session to export the complete mi
 ### 3. Collect Custom Training Data
 
 ```bash
-cd Data_Engineering/Dataset
+cd Data_Engineering
 python Collect_Data.py
 ```
 
@@ -244,8 +245,8 @@ Profiles 500 consecutive operational cycles across MediaPipe inference, 42D norm
 
 | Asset | Location | Description |
 |:------|:---------|:------------|
-| Development dataset | [`Data_Engineering/Dataset/virtual_mouse_data.csv`](Data_Engineering/Dataset/virtual_mouse_data.csv) | 10,008 instances $\times$ 42 features + label (5 subjects) |
-| External held-out cohort | [`Data_Engineering/Dataset/p1.csv`](Data_Engineering/Dataset/p1.csv), [`p2.csv`](Data_Engineering/Dataset/p2.csv), [`p3.csv`](Data_Engineering/Dataset/p3.csv) | 766 unseen instances across 3 external subjects |
+| Development dataset | [`Data_Engineering/virtual_mouse_data.csv`](Data_Engineering/virtual_mouse_data.csv) | 10,008 instances $\times$ 42 features + label (5 subjects) |
+| External held-out cohort | [`Data_Engineering/p1.csv`](Data_Engineering/p1.csv), [`p2.csv`](Data_Engineering/p2.csv), [`p3.csv`](Data_Engineering/p3.csv) | 766 unseen instances across 3 external subjects |
 | Kaggle dataset | [kaggle.com/datasets/haithmalakhali/virtual-mouse-landmarks](https://www.kaggle.com/datasets/haithmalakhali/virtual-mouse-landmarks) | Public Release v1.0.0 |
 | Trained model | [`Model_Training/virtual_mouse_brain.pkl`](Model_Training/virtual_mouse_brain.pkl) | `Pipeline([StandardScaler, SVC(rbf, C=10.0)])` — 1,139 SVs |
 
