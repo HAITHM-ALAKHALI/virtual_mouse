@@ -116,7 +116,6 @@ Conducted across 6 independent live interactive camera sessions isolating each s
 │   ├── p1.csv                      # Unseen held-out Subject 1 dataset (292 instances)
 │   ├── p2.csv                      # Unseen held-out Subject 2 dataset (212 instances)
 │   ├── p3.csv                      # Unseen held-out Subject 3 dataset (262 instances)
-│   └── data_cleaning.ipynb         # Exploratory analysis and preprocessing
 │
 ├── Model_Training/
 │   ├── Train_Model.ipynb           # Classifier benchmarking (RF, SVM-RBF, MLP) & held-out evaluation
