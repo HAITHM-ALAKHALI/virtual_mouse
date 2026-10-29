@@ -118,16 +118,10 @@ class VirtualMouseController:
         self._event_log: deque = deque(maxlen=20)
         self._log_lock = threading.Lock()
         self._log_counter: int = 0
+        self._full_session_log: list = []
 
         # Load serialized SVM classifier pipeline (virtual_mouse_brain.pkl)
         self._model = self._load_model()
-
-        # طابور بحد أقصى 20 لعرض آخر الأحداث في الواجهة فقط دون إبطائها
-        self._event_log: deque = deque(maxlen=20)
-        # قائمة كاملة تحفظ كل أحداث الجلسة من البداية للتصدير عند الطلب
-        self._full_session_log: list = []
-        self._log_lock = threading.Lock()
-        self._log_counter: int = 0
 
     # -------------------------------------------------------------------------
     # Thread-Safe Property Accessors & Mutators
@@ -369,7 +363,7 @@ class VirtualMouseController:
                     now = time.time()
 
                     # =========================================================================
-                    # 1. حالة السحب (Drag State Machine & Kinematics - Section III-C)
+                    # 1. (Drag State Machine & Kinematics - Section III-C)
                     # =========================================================================
                     if prediction == "Drag":
                         self._right_clicked = False
@@ -409,7 +403,7 @@ class VirtualMouseController:
 
                     else:
                         # =====================================================================
-                        # 2. إنهاء السحب بمرشح التخلف الزمني (Drag Release via Hysteresis)
+                        # 2. (Drag Release via Hysteresis)
                         # =====================================================================
                         if dragging:
                             if ENABLE_DRAG_HYSTERESIS:
@@ -435,7 +429,7 @@ class VirtualMouseController:
                             drag_change_frames = 0
 
                         # =====================================================================
-                        # 3. بقية الإيماءات التشغيلية (Primary Discrete Action Dispatcher)
+                        # 3.(Primary Discrete Action Dispatcher)
                         # =====================================================================
                         if prediction == "Move":
                             self._right_clicked = False
@@ -463,7 +457,7 @@ class VirtualMouseController:
                             cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
                             plocX, plocY = clocX, clocY
 
-                        # حماية: تنفيذ النقرات والتمرير فقط إذا لم يكن زر السحب مضغوطاً
+                        # Guard: Dispatch clicks and scrolling only when not dragging
                         elif not dragging:
                             # -------------------------------------------------
                             # Left Click Action Subsystem (Section III-C)
