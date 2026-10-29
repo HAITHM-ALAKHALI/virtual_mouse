@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this software or dataset in your research, please cite it as below."
+authors:
+  - family-names: "Al-Akhali"
+    given-names: "Haithm Abdulwali"
+    affiliation: "Department of Computer Science, Sana'a University, Yemen"
+title: "A Hybrid Architecture for Vision-Based Virtual Mouse Systems: Normalized Gesture Classification and Rule-Based OS Event Dispatching"
+version: 1.0.0
+date-released: 2026-10-29
+url: "https://github.com/HAITHM-ALAKHALI/virtual_mouse"
