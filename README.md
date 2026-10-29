@@ -1,6 +1,7 @@
 <div align="center">
 
 # A Hybrid Architecture for Vision-Based Virtual Mouse Systems
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23773655.svg)](https://doi.org/10.5281/zenodo.23773655)
 
 _Normalized Gesture Classification and Rule-Based OS Event Dispatching_
 
@@ -275,7 +276,8 @@ If you use this architecture, code, or dataset in your research, please cite:
   title     = {A Hybrid Architecture for Vision-Based Virtual Mouse Systems: Normalized Gesture Classification and Rule-Based OS Event Dispatching},
   booktitle = {IEEE Conference Proceedings / arXiv Preprint},
   year      = {2026},
-  url       = {[https://github.com/HAITHM-ALAKHALI/virtual_mouse](https://github.com/HAITHM-ALAKHALI/virtual_mouse)}
+  doi       = {10.5281/zenodo.23773655},
+  url       = {https://doi.org/10.5281/zenodo.23773655}
 }
 ```
 

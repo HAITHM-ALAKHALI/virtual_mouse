@@ -6,5 +6,6 @@ authors:
     affiliation: "Department of Computer Science, Sana'a University, Yemen"
 title: "A Hybrid Architecture for Vision-Based Virtual Mouse Systems: Normalized Gesture Classification and Rule-Based OS Event Dispatching"
 version: 1.0.0
+doi: "10.5281/zenodo.23773655"
 date-released: 2026-10-29
 url: "https://github.com/HAITHM-ALAKHALI/virtual_mouse"
