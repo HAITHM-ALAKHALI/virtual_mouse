@@ -281,9 +281,12 @@ If you use this architecture, code, or dataset in your research, please cite:
 
 ---
 
-## License
+## License & Third-Party Notice
 
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+- **Source Code:** The source code of this project is licensed under the [MIT License](LICENSE).
+- **Trained Model:** The trained classifier pipeline (`virtual_mouse_brain.pkl`) is distributed under the [MIT License](LICENSE).
+- **Dataset:** The empirical hand-landmark dataset is distributed under the [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/) license.
+- **Third-Party Assets:** The MediaPipe hand landmark model asset (`hand_landmarker.task`) is a third-party model developed by Google. Please refer to the official [MediaPipe documentation](https://developers.google.com/mediapipe) and applicable asset-specific terms for redistribution conditions.
 
 ---
 
