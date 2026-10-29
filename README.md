@@ -1,7 +1,8 @@
 <div align="center">
 
 # A Hybrid Architecture for Vision-Based Virtual Mouse Systems
-*Normalized Gesture Classification and Rule-Based OS Event Dispatching*
+
+_Normalized Gesture Classification and Rule-Based OS Event Dispatching_
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
@@ -20,7 +21,7 @@
 This repository contains the official reference implementation, benchmark scripts, and empirical telemetry logs for the research paper:
 
 > **A Hybrid Architecture for Vision-Based Virtual Mouse Systems: Normalized Gesture Classification and Rule-Based OS Event Dispatching**  
-> *Haithm Abdulwali Al-Akhali — Department of Computer Science, Faculty of Computer Science and Information Technology, Sana'a University*
+> _Haithm Abdulwali Al-Akhali — Department of Computer Science, Faculty of Computer Science and Information Technology, Sana'a University_
 
 Vision-based human-computer interaction (HCI) interfaces frequently suffer from operational instability and actuation ambiguity, including high-frequency cursor jitter, unintentional multi-click triggers, and unintended context-menu dismissals caused by hardware-dependent frame rate variations and involuntary physiological hand tremors. This project presents an empirically evaluated hybrid architecture for real-time virtual mouse control that bridges probabilistic computer vision inference with rule-based operating system (OS) event-dispatching constraints.
 
@@ -37,12 +38,12 @@ The proposed pipeline decouples spatial landmark kinematics from intentional sta
 - **Bifurcated 42D Anatomical Normalization Pipeline**
   - **Continuous Kinematic Stream:** Maps raw index fingertip $\mathbf{p}_8 = (x_8, y_8)$ to display resolution $(w_{\text{scr}}, h_{\text{scr}})$ with an exponential smoothing divisor $\alpha \in [1, 15]$.
   - **Normalized Classification Stream:**
-    1. *Translation Normalization:* Wrist landmark ($\mathbf{p}_0$) defined as the coordinate origin ($\mathbf{q}_i = \mathbf{p}_i - \mathbf{p}_0$).
-    2. *Anatomical Scale Normalization:* Scaled by characteristic palm length $s = \Vert{}\mathbf{p}_9 - \mathbf{p}_0\Vert{}_2$ with an explicit division-by-zero safeguard.
-    3. *Handedness Canonicalization:* Horizontal reflection ($\hat{x}_i \leftarrow -\hat{x}_i$ if $\text{Handedness} = \text{Left}$) canonicalizing left-hand geometry into the right-hand convention.
+    1. _Translation Normalization:_ Wrist landmark ($\mathbf{p}_0$) defined as the coordinate origin ($\mathbf{q}_i = \mathbf{p}_i - \mathbf{p}_0$).
+    2. _Anatomical Scale Normalization:_ Scaled by characteristic palm length $s = \Vert{}\mathbf{p}_9 - \mathbf{p}_0\Vert{}_2$ with an explicit division-by-zero safeguard.
+    3. _Handedness Canonicalization:_ Horizontal reflection ($\hat{x}_i \leftarrow -\hat{x}_i$ if $\text{Handedness} = \text{Left}$) canonicalizing left-hand geometry into the right-hand convention.
 
 - **Rule-Based Action Dispatcher (`Agent_Execution/Main.py`)**
-  - **FPS-Decoupled Wall-Clock Rate Limiting:** Enforces $\Delta t = t_{\text{now}} - t_{\text{last\_click}} \ge T_{\text{interval}}$ using `time.time()`, where $T_{\text{interval}} = \max(0.05, \text{clickDelay} \times 0.025)\text{ s}$ (defaulting to $0.25\text{ s}$ at slider value 10).
+  - **FPS-Decoupled Wall-Clock Rate Limiting:** Enforces $\Delta t = t_{\text{now}} - t_{\text{last}} \ge T_{\text{interval}}$ using `time.time()`, where $T_{\text{interval}} = \max(0.05, \text{clickDelay} \times 0.025)\text{ s}$ (defaulting to $0.25\text{ s}$ at slider value 10).
   - **Actuation Coordinate Freezing:** Explicitly locks OS pointer coordinates at the pre-actuation anchor $(p_{\text{locX}}, p_{\text{locY}})$ during `Left_Click` and `Right_Click` actuation to mitigate physical finger-flexion slip.
   - **Latched Context-Menu State Machine ($L_R$):** Dispatches a single right-click event and latches state, suppressing redundant frame triggers until an explicit non-right-click gesture transition or tracking loss occurs.
   - **Two-Frame Drag Hysteresis ($\Delta f \ge 2$):** Requires two consecutive non-drag frames before releasing `Button.left`, absorbing transient single-frame classification noise.
@@ -58,48 +59,48 @@ The proposed pipeline decouples spatial landmark kinematics from intentional sta
 
 ### 1. Classifier Pipeline Comparison (2,002 Test Instances — Stratified 80/20 Split)
 
-| Classifier Architecture | Accuracy (%) | Macro Precision | Macro Recall | Macro F1-Score | Isolated Latency (ms) | Training Time (s) |
-|:------------------------|:------------:|:---------------:|:------------:|:--------------:|:---------------------:|:-----------------:|
-| Random Forest (100 Estimators) | 97.35% | 0.97 | 0.97 | 0.97 | 9.117 | 4.43 |
-| **SVM (RBF Kernel, $C=10.0$)** | **98.10%** | **0.98** | **0.98** | **0.98** | **0.717** | **0.68** |
-| Neural Network (MLP, 64$\times$32) | 98.20% | 0.98 | 0.98 | 0.98 | 0.591 | 14.66 |
+| Classifier Architecture            | Accuracy (%) | Macro Precision | Macro Recall | Macro F1-Score | Isolated Latency (ms) | Training Time (s) |
+| :--------------------------------- | :----------: | :-------------: | :----------: | :------------: | :-------------------: | :---------------: |
+| Random Forest (100 Estimators)     |    97.35%    |      0.97       |     0.97     |      0.97      |         9.117         |       4.43        |
+| **SVM (RBF Kernel, $C=10.0$)**     |  **98.10%**  |    **0.98**     |   **0.98**   |    **0.98**    |       **0.717**       |     **0.68**      |
+| Neural Network (MLP, 64$\times$32) |    98.20%    |      0.98       |     0.98     |      0.98      |         0.591         |       14.66       |
 
 ### 2. Zero-Shot Cross-Subject Generalization (External Held-Out Cohort)
 
 Evaluated directly using the frozen `virtual_mouse_brain.pkl` pipeline on sequential frames from three unseen human participants without any fine-tuning or calibration:
 
-| Evaluation Cohort | Subjects | Dataset File | Sample Count | Accuracy (%) | Macro F1-Score |
-|:------------------|:--------:|:-------------|:------------:|:------------:|:--------------:|
-| Internal Test Split | 5 (Shared) | `virtual_mouse_data.csv` | 2,002 | 98.10% | 0.98 |
-| Subject 1 (External) | 1 (Unseen) | `p1.csv` | 292 | 81.51% | — |
-| Subject 2 (External) | 1 (Unseen) | `p2.csv` | 212 | 100.00% | — |
-| Subject 3 (External) | 1 (Unseen) | `p3.csv` | 262 | 85.88% | — |
-| **Combined Held-Out Cohort** | **3 (Unseen)** | `p1.csv` – `p3.csv` | **766** | **88.12%** | **0.88** |
+| Evaluation Cohort            |    Subjects    | Dataset File             | Sample Count | Accuracy (%) | Macro F1-Score |
+| :--------------------------- | :------------: | :----------------------- | :----------: | :----------: | :------------: |
+| Internal Test Split          |   5 (Shared)   | `virtual_mouse_data.csv` |    2,002     |    98.10%    |      0.98      |
+| Subject 1 (External)         |   1 (Unseen)   | `p1.csv`                 |     292      |    81.51%    |       —        |
+| Subject 2 (External)         |   1 (Unseen)   | `p2.csv`                 |     212      |   100.00%    |       —        |
+| Subject 3 (External)         |   1 (Unseen)   | `p3.csv`                 |     262      |    85.88%    |       —        |
+| **Combined Held-Out Cohort** | **3 (Unseen)** | `p1.csv` – `p3.csv`      |   **766**    |  **88.12%**  |    **0.88**    |
 
 ### 3. Exploratory Live Ablation Study of Action Dispatcher Mechanisms
 
 Conducted across 6 independent live interactive camera sessions isolating each software control in `Main.py` and auditing raw internal telemetry traces in `Test/`:
 
-| Configuration Pipeline | Audit Log File (`Test/`) | Logged Drift Span (px) | Cascade Log Events | Redundant Menu Events | Premature Drops (Drops / Starts) |
-|:-----------------------|:-------------------------|:----------------------:|:------------------:|:---------------------:|:--------------------------------:|
-| *Naive Baseline (All Off)* | [`audit_baseline.txt`](Test/audit_baseline.txt) | 99.92 | 59 (57 excess) | 48 (47 excess) | 1 / 1 (100.0\%) |
-| w/o Actuation Coord Freeze | [`audit_wo_freeze.txt`](Test/audit_wo_freeze.txt) | 54.41 | 0 | 0 | 0 / 0 (0.0\%) |
-| w/o Rate Limiting ($\Delta t$) | [`audit_wo_debounce.txt`](Test/audit_wo_debounce.txt) | **0.00** | 72 (71 excess) | 0 | 0 / 0 (0.0\%) |
-| w/o Latched Menu FSM ($L_R$) | [`audit_wo_latch.txt`](Test/audit_wo_latch.txt) | **0.00** | 0 | 61 (60 seq.) | 0 / 0 (0.0\%) |
-| w/o Drag Hysteresis ($\Delta f \ge 2$) | [`audit_wo_drag.txt`](Test/audit_wo_drag.txt) | **0.00** | 0 | 0 | 7 / 12 (58.3\%) |
-| **Full Proposed Pipeline** | [`audit_proposed.txt`](Test/audit_proposed.txt) | **0.00** | **0** | **0** | **0 / 1 (0.0\%)** |
+| Configuration Pipeline                 | Audit Log File (`Test/`)                              | Logged Drift Span (px) | Cascade Log Events | Redundant Menu Events | Premature Drops (Drops / Starts) |
+| :------------------------------------- | :---------------------------------------------------- | :--------------------: | :----------------: | :-------------------: | :------------------------------: |
+| _Naive Baseline (All Off)_             | [`audit_baseline.txt`](Test/audit_baseline.txt)       |         99.92          |   59 (57 excess)   |    48 (47 excess)     |         1 / 1 (100.0\%)          |
+| w/o Actuation Coord Freeze             | [`audit_wo_freeze.txt`](Test/audit_wo_freeze.txt)     |         54.41          |         0          |           0           |          0 / 0 (0.0\%)           |
+| w/o Rate Limiting ($\Delta t$)         | [`audit_wo_debounce.txt`](Test/audit_wo_debounce.txt) |        **0.00**        |   72 (71 excess)   |           0           |          0 / 0 (0.0\%)           |
+| w/o Latched Menu FSM ($L_R$)           | [`audit_wo_latch.txt`](Test/audit_wo_latch.txt)       |        **0.00**        |         0          |     61 (60 seq.)      |          0 / 0 (0.0\%)           |
+| w/o Drag Hysteresis ($\Delta f \ge 2$) | [`audit_wo_drag.txt`](Test/audit_wo_drag.txt)         |        **0.00**        |         0          |           0           |         7 / 12 (58.3\%)          |
+| **Full Proposed Pipeline**             | [`audit_proposed.txt`](Test/audit_proposed.txt)       |        **0.00**        |       **0**        |         **0**         |        **0 / 1 (0.0\%)**         |
 
 > **Methodological Note:** Because each ablation condition was evaluated in a separate live webcam session, the recorded event counts and coordinate displacements represent descriptive telemetry observations under the tested conditions rather than trial-matched causal estimates from identical video replays. In `audit_proposed.txt`, the full configuration logged 15 accepted `LEFT_CLICK` actuations (52 cooldown candidates suppressed), 2 accepted `RIGHT_CLICK` dispatches (76 held-state candidates suppressed), 1 `DRAG_START`, 1 completed `DRAG_DROP` (0 premature drops), and 8 `SCROLL_UP` events (13 deadzone candidates suppressed).
 
 ### 4. End-to-End Runtime Latency Profile (500 Operational Cycles)
 
-| Pipeline Stage | Mean Latency $\pm$ Std (ms) | Notes |
-|:---------------|:---------------------------:|:------|
-| 1. Video Acquisition & MediaPipe Inference | 33.53 $\pm$ 38.54 ms | 95th percentile: 62.93 ms |
-| 2. 42D Anatomical Normalization | 0.06 $\pm$ 0.01 ms | Translation, scale, handedness reflection |
-| 3. SVM-RBF Classification | 0.72 $\pm$ 0.14 ms | 0.717 ms isolated micro-benchmark |
-| 4. Action Dispatcher & OS Event Injection | 0.44 $\pm$ 0.08 ms | Includes mutex telemetry logging + `pynput` |
-| **Total Post-Detection Overhead (Stages 2–4)** | **~1.22 ms** | **$< 4\%$ of nominal 30 FPS frame budget** |
+| Pipeline Stage                                 | Mean Latency $\pm$ Std (ms) | Notes                                       |
+| :--------------------------------------------- | :-------------------------: | :------------------------------------------ |
+| 1. Video Acquisition & MediaPipe Inference     |    33.53 $\pm$ 38.54 ms     | 95th percentile: 62.93 ms                   |
+| 2. 42D Anatomical Normalization                |     0.06 $\pm$ 0.01 ms      | Translation, scale, handedness reflection   |
+| 3. SVM-RBF Classification                      |     0.72 $\pm$ 0.14 ms      | 0.717 ms isolated micro-benchmark           |
+| 4. Action Dispatcher & OS Event Injection      |     0.44 $\pm$ 0.08 ms      | Includes mutex telemetry logging + `pynput` |
+| **Total Post-Detection Overhead (Stages 2–4)** |        **~1.22 ms**         | **$< 4\%$ of nominal 30 FPS frame budget**  |
 
 ---
 
@@ -155,11 +156,11 @@ Conducted across 6 independent live interactive camera sessions isolating each s
 
 ### Prerequisites
 
-| Requirement | Version |
-|:------------|:--------|
-| Python | 3.10+ (Tested on Python 3.13.5) |
-| OS | Windows 10/11 (primary testbed: Windows 11 Build 26200), macOS / Linux |
-| Hardware | Monocular USB Webcam, 4+ CPU cores recommended |
+| Requirement | Version                                                                |
+| :---------- | :--------------------------------------------------------------------- |
+| Python      | 3.10+ (Tested on Python 3.13.5)                                        |
+| OS          | Windows 10/11 (primary testbed: Windows 11 Build 26200), macOS / Linux |
+| Hardware    | Monocular USB Webcam, 4+ CPU cores recommended                         |
 
 ### Setup
 
@@ -179,16 +180,16 @@ pip install -r requirements.txt
 
 ### Dependencies
 
-| Package | Purpose |
-|:--------|:--------|
-| `mediapipe` | Hand landmark detection (Tasks API, `RunningMode.VIDEO`) |
-| `opencv-python` | Camera capture and image processing |
-| `scikit-learn` | SVM classifier pipeline (`StandardScaler` + `SVC`) |
-| `pynput` | OS-level mouse event injection (`Controller`, `Button`) |
-| `customtkinter` | Modern dark-themed GUI framework |
-| `Pillow` | BGR to RGB image conversion for GUI preview |
-| `numpy` | Vectorized array operations and linear interpolation |
-| `joblib` | Model serialization and loading |
+| Package         | Purpose                                                  |
+| :-------------- | :------------------------------------------------------- |
+| `mediapipe`     | Hand landmark detection (Tasks API, `RunningMode.VIDEO`) |
+| `opencv-python` | Camera capture and image processing                      |
+| `scikit-learn`  | SVM classifier pipeline (`StandardScaler` + `SVC`)       |
+| `pynput`        | OS-level mouse event injection (`Controller`, `Button`)  |
+| `customtkinter` | Modern dark-themed GUI framework                         |
+| `Pillow`        | BGR to RGB image conversion for GUI preview              |
+| `numpy`         | Vectorized array operations and linear interpolation     |
+| `joblib`        | Model serialization and loading                          |
 
 ---
 
@@ -242,25 +243,25 @@ Profiles 500 consecutive operational cycles across MediaPipe inference, 42D norm
 
 ## Dataset & Pre-trained Weights
 
-| Asset | Location | Description |
-|:------|:---------|:------------|
-| Development dataset | [`Data_Engineering/virtual_mouse_data.csv`](Data_Engineering/virtual_mouse_data.csv) | 10,008 instances $\times$ 42 features + label (5 subjects) |
-| External held-out cohort | [`Data_Engineering/p1.csv`](Data_Engineering/p1.csv), [`p2.csv`](Data_Engineering/p2.csv), [`p3.csv`](Data_Engineering/p3.csv) | 766 unseen instances across 3 external subjects |
-| Kaggle dataset | [kaggle.com/datasets/haithmalakhali/virtual-mouse-landmarks](https://www.kaggle.com/datasets/haithmalakhali/virtual-mouse-landmarks) | Public Release v1.0.0 |
-| Trained model | [`Model_Training/virtual_mouse_brain.pkl`](Model_Training/virtual_mouse_brain.pkl) | `Pipeline([StandardScaler, SVC(rbf, C=10.0)])` — 1,139 SVs |
+| Asset                    | Location                                                                                                                             | Description                                                |
+| :----------------------- | :----------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------- |
+| Development dataset      | [`Data_Engineering/virtual_mouse_data.csv`](Data_Engineering/virtual_mouse_data.csv)                                                 | 10,008 instances $\times$ 42 features + label (5 subjects) |
+| External held-out cohort | [`Data_Engineering/p1.csv`](Data_Engineering/p1.csv), [`p2.csv`](Data_Engineering/p2.csv), [`p3.csv`](Data_Engineering/p3.csv)       | 766 unseen instances across 3 external subjects            |
+| Kaggle dataset           | [kaggle.com/datasets/haithmalakhali/virtual-mouse-landmarks](https://www.kaggle.com/datasets/haithmalakhali/virtual-mouse-landmarks) | Public Release v1.0.0                                      |
+| Trained model            | [`Model_Training/virtual_mouse_brain.pkl`](Model_Training/virtual_mouse_brain.pkl)                                                   | `Pipeline([StandardScaler, SVC(rbf, C=10.0)])` — 1,139 SVs |
 
 ---
 
 ## Gesture Reference & Runtime Configuration
 
-| Gesture | Hand Pose | Rule-Based OS Action |
-|:--------|:----------|:---------------------|
-| ☝️ **Move** | Index finger extended | Continuous cursor tracking with smoothing divisor $\alpha$ |
-| ✌️ **Left Click** | Index + Middle fingers | Coordinate-frozen, rate-limited left click ($T_{\text{interval}} = 0.25\text{ s}$) |
-| 🤟 **Right Click** | Index + Middle + Ring | Coordinate-frozen, state-latched right click (single dispatch) |
-| 🖐️ **Scroll** | Open palm | Bidirectional vertical scroll outside center deadzone |
-| ✊ **Drag** | Closed fist | Press-hold `Button.left`; released after 2-frame hysteresis |
-| 🤚 **Neutral** | Relaxed / Transition pose | Suppresses OS event injection and resets non-latched states |
+| Gesture            | Hand Pose                 | Rule-Based OS Action                                                               |
+| :----------------- | :------------------------ | :--------------------------------------------------------------------------------- |
+| ☝️ **Move**        | Index finger extended     | Continuous cursor tracking with smoothing divisor $\alpha$                         |
+| ✌️ **Left Click**  | Index + Middle fingers    | Coordinate-frozen, rate-limited left click ($T_{\text{interval}} = 0.25\text{ s}$) |
+| 🤟 **Right Click** | Index + Middle + Ring     | Coordinate-frozen, state-latched right click (single dispatch)                     |
+| 🖐️ **Scroll**      | Open palm                 | Bidirectional vertical scroll outside center deadzone                              |
+| ✊ **Drag**        | Closed fist               | Press-hold `Button.left`; released after 2-frame hysteresis                        |
+| 🤚 **Neutral**     | Relaxed / Transition pose | Suppresses OS event injection and resets non-latched states                        |
 
 ---
 
@@ -290,6 +291,6 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 
 **Haithm Abdulwali Al-Akhali**  
 Department of Computer Science, Faculty of Computer Science and Information Technology  
-Sana'a University, Sana'a, Yemen  
+Sana'a University, Sana'a, Yemen
 
 [🌐 Portfolio](https://haithm-al-akhali.vercel.app/) · [💻 GitHub](https://github.com/HAITHM-ALAKHALI) · [📊 Kaggle](https://www.kaggle.com/datasets/haithmalakhali/virtual-mouse-landmarks) · [✉️ Email](mailto:haithmabdulwali.alakhali@gmail.com)
