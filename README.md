@@ -11,9 +11,7 @@ _Normalized Gesture Classification and Rule-Based OS Event Dispatching_
 [![MediaPipe](https://img.shields.io/badge/MediaPipe-Tasks_API-00A98F?style=flat-square&logo=google&logoColor=white)](https://developers.google.com/mediapipe)
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-1.3%2B-F7931E?style=flat-square&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
 [![Dataset](https://img.shields.io/badge/Dataset-Kaggle_v1.0.0-20BEFF?style=flat-square&logo=kaggle&logoColor=white)](https://www.kaggle.com/datasets/haithmalakhali/virtual-mouse-landmarks)
-[![Preprint](https://img.shields.io/badge/arXiv-Preprint-B31B1B?style=flat-square&logo=arxiv&logoColor=white)](https://arxiv.org/)
-[![IEEE Paper](https://img.shields.io/badge/Paper-IEEE_Format-00629B?style=flat-square&logo=ieee&logoColor=white)](https://github.com/HAITHM-ALAKHALI/virtual_mouse)
-
+[![Preprint](https://img.shields.io/badge/Preprints.org-Preprint-orange.svg)](https://www.preprints.org)
 </div>
 
 ---
