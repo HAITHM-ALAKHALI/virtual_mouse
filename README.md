@@ -1,7 +1,7 @@
 <div align="center">
 
 # A Hybrid Architecture for Vision-Based Virtual Mouse Systems
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23773655.svg)](https://doi.org/10.5281/zenodo.23773654)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23773654.svg)](https://doi.org/10.5281/zenodo.23773654)
 [![XERJ Corpus Hub contributor](https://hub.xerj.org/contributors/HAITHM-ALAKHALI/badge.svg)](https://hub.xerj.org/contributors/HAITHM-ALAKHALI)
 
 _Normalized Gesture Classification and Rule-Based OS Event Dispatching_
